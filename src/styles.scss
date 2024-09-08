@@ -1,8 +1,13 @@
 $gutter: 1rem;
 @import "assets/layout/styles/layout/layout.scss";
 
-@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/themes/lara-light-blue/theme.css"; //NOTA: Cambiar por el tema deseado https://primeng.org/theming#builtinthemes
 @import "primeng/resources/primeng.css";
 @import "primeng/resources/primeng.min.css";
 @import "primeflex/primeflex.scss";
 @import "primeicons/primeicons.css";
+
+/* Demos */
+@import "assets/demo/styles/flags/flags.css";
+@import "assets/demo/styles/badges.scss";
+@import "assets/demo/styles/code.scss";

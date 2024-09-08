@@ -19,13 +19,13 @@ export class AppComponent {
   ngOnInit(): void {
     this.primengConfig.ripple = true;
 
-    //optional configuration with the default configuration
+    //NOTA: configuracion de estilos de la app
     const config: AppConfig = {
         ripple: true,                       //efecto animacion de ondas en los botones
         inputStyle: 'outlined',             //estilo de fondo de los inputs "outlined" o "filled"
         menuMode: 'static',                 //menu lateral "static" o "overlay"
         colorScheme: 'light',               //tema "light" o "dark" va asociado con el siguiente parametro
-        theme: 'lara-light-indigo',         //tema por defecto, aun no se cambiar de tema
+        theme: 'lara-light-indigo',         //tema por defecto, aun no se cambiar de tema (en styles.scss)
         scale: 16                           //tamaño de letra global, va desde el "12" al "16"
     };
     this.layoutService.config.set(config);

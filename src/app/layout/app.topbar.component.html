@@ -1,6 +1,6 @@
 <div class="layout-topbar">
     <a class="layout-topbar-logo" routerLink="">
-        <img src="assets/layout/images/logo.png" alt="logo">
+        <img src="assets/images/logo.png" alt="logo">
         <span>PG SAFFIRO</span>
     </a>
 
@@ -15,15 +15,13 @@
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
         <button class="p-link layout-topbar-button">
             <i class="pi pi-calendar"></i>
-            <span>Calendar</span>
         </button>
-        <button class="p-link layout-topbar-button">
+        <p-menu #menu [model]="items" [popup]="true" />
+        <button class="p-link layout-topbar-button" (click)="menu.toggle($event)">
             <i class="pi pi-user"></i>
-            <span>Profile</span>
         </button>
         <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
             <i class="pi pi-cog"></i>
-            <span>Settings</span>
         </button>
     </div>
 </div>

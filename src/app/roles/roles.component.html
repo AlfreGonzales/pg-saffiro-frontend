@@ -1,8 +1,82 @@
 <div class="grid">
     <div class="col-12">
-        <div class="card">
-            <h4>Módulo de Roles</h4>
-            <p>roles works!</p>
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nuevo rol" icon="pi pi-plus" class="p-button-success mr-2" (click)="openNew()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="listaRoles" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['nombre', 'modulos']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Lista de roles</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"></p-sortIcon></th>
+                        <th pSortableColumn="modulos">Módulos<p-sortIcon field="modulos"></p-sortIcon></th>
+                        <th pSortableColumn="estado_logico">Estado<p-sortIcon field="estado_logico"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rol>
+                    <tr>
+                        <td>
+                            {{ rol.nombre }}
+                        </td>
+                        <td>
+                            {{ rol.modulos }}
+                        </td>
+                        <td>
+                            <p-tag [value]="rol.estado_logico ? 'ACTIVO' : 'INACTIVO'" [severity]="rol.estado_logico ? 'success' : 'warning'" />
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editRol(rol)"></button>
+                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" [swal]="alertaBorrar" (confirm)="inactivar(rol)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
         </div>
+
+        <p-dialog [(visible)]="productDialog" [style]="{width: '500px'}" header="Nuevo rol" [modal]="true" class="p-fluid">
+            <form [formGroup]="formRol" (ngSubmit)="crearUsuario()">
+
+                    <div class="field">
+                        <label for="nombre">Nombre</label>
+                        <input formControlName="nombre" type="text" pInputText id="nombre" />
+                        @if (formRol.get('nombre')?.hasError('required') && formRol.get('nombre')?.touched) {
+                        <small> El campo nombre es requerido </small>
+                        }
+                        @if (formRol.get('nombre')?.hasError('minlength') && formRol.get('nombre')?.touched) {
+                        <small> El campo nombre debe tener al menos 3 caracteres </small>
+                        }
+                    </div>
+                    
+                    <div class="field">
+                        <label for="modulos">Módulos</label>
+                        <p-multiSelect [options]="listamodulosMultiselect" formControlName="modulos" optionLabel="name" placeholder="Seleccione módulos" inputId="modulos" [appendTo]="'body'" />
+                        @if (formRol.get('modulos')?.hasError('required') && formRol.get('modulos')?.touched) {
+                        <small> El campo módulos es requerido </small>
+                        }
+                    </div>
+                    
+                    <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" type="button" (click)="hideDialog()"></button>
+                    <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" type="submit"></button>
+
+            </form>
+        </p-dialog>
+
     </div>
 </div>

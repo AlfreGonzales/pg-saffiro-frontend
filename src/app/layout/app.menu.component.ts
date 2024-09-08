@@ -1,6 +1,7 @@
 import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
+import { Modulos } from '../shared/enums/modulos';
 
 @Component({
     selector: 'app-menu',
@@ -13,18 +14,22 @@ export class AppMenuComponent implements OnInit {
     constructor(public layoutService: LayoutService) { }
 
     ngOnInit() {
+        const storage = localStorage.getItem('usuario');
+        const usuarioInfo = JSON.parse(storage!);
+        const accesosPermitidos = usuarioInfo.rol.modulos.split(', ');
+
         this.model = [
             {
                 label: 'Inicio',
                 items: [
-                    { label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
+                    { id: Modulos.DASHBOARDS, label: 'Dashboards', icon: 'pi pi-fw pi-home', routerLink: ['/'] }
                 ]
             },
             {
                 label: 'Administración',
                 items: [
-                    { label: 'Roles', icon: 'pi pi-fw pi-th-large', routerLink: ['/roles'] },
-                    { label: 'Usuarios', icon: 'pi pi-fw pi-user', routerLink: ['/usuarios'] },
+                    { id: Modulos.ROLES, label: 'Roles', icon: 'pi pi-fw pi-th-large', routerLink: ['/roles'] },
+                    { id: Modulos.USUARIOS, label: 'Usuarios', icon: 'pi pi-fw pi-user', routerLink: ['/usuarios'] },
                     { label: 'Log de accesos', icon: 'pi pi-fw pi-history', routerLink: ['/log-accesos'] }
                 ]
             },
@@ -36,6 +41,9 @@ export class AppMenuComponent implements OnInit {
                     { label: 'Empresas', icon: 'pi pi-fw pi-building', routerLink: ['/empresas'] }
                 ]
             }
-        ];
+        ].map(seccion => ({
+            ...seccion,
+            items: seccion.items.filter(item => accesosPermitidos.includes(item.id))
+        })).filter(seccion => seccion.items.length > 0);
     }
 }
