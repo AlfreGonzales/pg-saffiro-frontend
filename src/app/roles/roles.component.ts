@@ -64,7 +64,8 @@ export class RolesComponent implements OnInit {
   listamodulosMultiselect: any[] = [
     { name: Modulos.DASHBOARDS },
     { name: Modulos.ROLES },
-    { name: Modulos.USUARIOS}
+    { name: Modulos.USUARIOS},
+    { name: Modulos.LOG_ACCESOS }
   ];
   
   productDialog: boolean = false;
@@ -167,7 +168,7 @@ export class RolesComponent implements OnInit {
       next: (data) => {
         this.obtenerLista();
       },
-      error: (err) => console.log(err.message)
+      error: (err) => console.error(err.message)
     });
     Swal.fire({
       title: "Inactivado!",

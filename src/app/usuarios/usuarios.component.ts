@@ -209,7 +209,7 @@ export class UsuariosComponent implements OnInit {
       next: (data) => {
         this.obtenerLista();
       },
-      error: (err) => console.log(err.message)
+      error: (err) => console.error(err.message)
     });
     Swal.fire({
       title: "Inactivado!",

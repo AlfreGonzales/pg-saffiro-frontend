@@ -33,6 +33,9 @@
                                 @if (formLogin.get('password')?.hasError('required') && formLogin.get('password')?.touched) {
                                     <small> El campo constraseña es requerido </small>
                                 }
+                                @if (formLogin.get('password')?.hasError('minlength') && formLogin.get('password')?.touched) {
+                                    <small> El campo constraseña debe tener al menos 8 caracteres </small>
+                                }
                             </div>
                         </div>
                 

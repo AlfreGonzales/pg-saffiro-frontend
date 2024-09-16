@@ -2,6 +2,7 @@ import { OnInit } from '@angular/core';
 import { Component } from '@angular/core';
 import { LayoutService } from './service/app.layout.service';
 import { Modulos } from '../shared/enums/modulos';
+import { LocalStorageService } from '../shared/services/local-storage.service';
 
 @Component({
     selector: 'app-menu',
@@ -11,12 +12,14 @@ export class AppMenuComponent implements OnInit {
 
     model: any[] = [];
 
-    constructor(public layoutService: LayoutService) { }
+    constructor(
+        public layoutService: LayoutService,
+        private localStorageService: LocalStorageService
+    ) { }
 
     ngOnInit() {
-        const storage = localStorage.getItem('usuario');
-        const usuarioInfo = JSON.parse(storage!);
-        const accesosPermitidos = usuarioInfo.rol.modulos.split(', ');
+        const usuarioInfo = this.localStorageService.getUsuario();
+        const permisos = usuarioInfo.permisos;
 
         this.model = [
             {
@@ -30,20 +33,20 @@ export class AppMenuComponent implements OnInit {
                 items: [
                     { id: Modulos.ROLES, label: 'Roles', icon: 'pi pi-fw pi-th-large', routerLink: ['/roles'] },
                     { id: Modulos.USUARIOS, label: 'Usuarios', icon: 'pi pi-fw pi-user', routerLink: ['/usuarios'] },
-                    { label: 'Log de accesos', icon: 'pi pi-fw pi-history', routerLink: ['/log-accesos'] }
+                    { id: Modulos.LOG_ACCESOS, label: 'Log de accesos', icon: 'pi pi-fw pi-history', routerLink: ['/log-accesos'] }
                 ]
             },
             {
                 label: 'Proyectos',
                 items: [
-                    { label: 'Tareas', icon: 'pi pi-fw pi-book', routerLink: ['/tareas'] },
-                    { label: 'Proyectos', icon: 'pi pi-fw pi-th-large', routerLink: ['/proyectos'] },
-                    { label: 'Empresas', icon: 'pi pi-fw pi-building', routerLink: ['/empresas'] }
+                    { id: Modulos.TAREAS, label: 'Tareas', icon: 'pi pi-fw pi-book', routerLink: ['/tareas'] },
+                    { id: Modulos.PROYECTOS, label: 'Proyectos', icon: 'pi pi-fw pi-th-large', routerLink: ['/proyectos'] },
+                    { id: Modulos.EMPRESAS, label: 'Empresas', icon: 'pi pi-fw pi-building', routerLink: ['/empresas'] }
                 ]
             }
         ].map(seccion => ({
             ...seccion,
-            items: seccion.items.filter(item => accesosPermitidos.includes(item.id))
+            items: seccion.items.filter(item => permisos.includes(item.id))
         })).filter(seccion => seccion.items.length > 0);
     }
 }

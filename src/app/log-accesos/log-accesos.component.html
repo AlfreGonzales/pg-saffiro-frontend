@@ -1,0 +1,58 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-table #dt [value]="listaLogAccesos" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['usuario.nombre', 'usuario.email']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Lista de log de accesos</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="ip">Ip<p-sortIcon field="ip"></p-sortIcon></th>
+                        <th pSortableColumn="usuario.nombres">Nombre de usuario<p-sortIcon field="usuario.nombres"></p-sortIcon></th>
+                        <th pSortableColumn="usuario.email">Email de usuario<p-sortIcon field="usuario.email"></p-sortIcon></th>
+                        <th pSortableColumn="accion">Acción<p-sortIcon field="accion"></p-sortIcon></th>
+                        <th pSortableColumn="ciudad">Ciudad<p-sortIcon field="ciudad"></p-sortIcon></th>
+                        <th pSortableColumn="pais">País<p-sortIcon field="pais"></p-sortIcon></th>
+                        <th pSortableColumn="detalle">Detalle</th>
+                        <th pSortableColumn="created_at">Fecha de registro<p-sortIcon field="created_at"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-logAcceso>
+                    <tr [ngStyle]="{backgroundColor: logAcceso.accion === 'Inicio de sesión' ? 'var(--teal-100)' : 'var(--red-100)'}">
+                        <td>
+                            {{ logAcceso.ip }}
+                        </td>
+                        <td>
+                            {{ logAcceso.usuario.nombres }}
+                        </td>
+                        <td>
+                            {{ logAcceso.usuario.email }}
+                        </td>
+                        <td>
+                            {{ logAcceso.accion }}
+                        </td>
+                        <td>
+                            {{ logAcceso.ciudad }}
+                        </td>
+                        <td>
+                            {{ logAcceso.pais }}
+                        </td>
+                        <td>
+                            {{ logAcceso.detalle | slice:0:50 }}...
+                        </td>
+                        <td>
+                            {{ logAcceso.created_at | date:'dd/MM/yyyy, HH:mm:ss' }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>

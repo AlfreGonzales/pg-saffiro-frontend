@@ -5,33 +5,46 @@ import { AppLayoutComponent } from './layout/app.layout.component';
 import { DashboardsComponent } from './dashboards/dashboards.component';
 import { RolesComponent } from './roles/roles.component';
 import { LoginComponent } from './auth/login/login.component';
+import { loginGuard } from './auth/login/login.guard';
+import { LogAccesosComponent } from './log-accesos/log-accesos.component';
+import { authResolver } from './auth/auth.resolver';
 
 export const routes: Routes = [
   {
     path: 'auth/login',
     component: LoginComponent,
-    title: 'Dashboards',
+    title: 'Login'
   },
   {
     path: '',
     component: AppLayoutComponent,
     title: 'Inicio',
+    resolve: { authInfo: authResolver },
     children: [
       {
         path: '',
         component: DashboardsComponent,
         title: 'Dashboards',
+        canActivate: [loginGuard]
       },
       {
         path: 'usuarios',
         component: UsuariosComponent,
         title: 'Usuarios',
+        canActivate: [loginGuard]
       },
       {
         path: 'roles',
         component: RolesComponent,
         title: 'Roles',
+        canActivate: [loginGuard]
       },
+      {
+        path: 'log-accesos',
+        component: LogAccesosComponent,
+        title: 'Log de accesos',
+        canActivate: [loginGuard]
+      }
     ],
   },
   { path: 'notfound', component: NotfoundComponent },

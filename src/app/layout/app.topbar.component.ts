@@ -4,6 +4,9 @@ import { LayoutService } from "./service/app.layout.service";
 import { Router } from '@angular/router';
 
 import Swal from 'sweetalert2';
+import { firstValueFrom } from 'rxjs';
+import { LogAccesosService } from '../log-accesos/log-accesos.service';
+import { LocalStorageService } from '../shared/services/local-storage.service';
 
 @Component({
     selector: 'app-topbar',
@@ -21,6 +24,8 @@ export class AppTopBarComponent implements OnInit {
 
     constructor(
         public layoutService: LayoutService,
+        private logAccesosService: LogAccesosService,
+        private localStorageService: LocalStorageService,
         private router: Router
     ) { }
 
@@ -34,8 +39,8 @@ export class AppTopBarComponent implements OnInit {
         ];
     }
 
-    cerrarSesion() {
-        Swal.fire({
+    async cerrarSesion() {
+        const resultado = await Swal.fire({
             title: "Desea cerrar sesión?",
             icon: "question",
             showCancelButton: true,
@@ -43,16 +48,45 @@ export class AppTopBarComponent implements OnInit {
             cancelButtonColor: "#d33",
             confirmButtonText: "Confirmar",
             cancelButtonText: "Cancelar"
-          }).then((result) => {
-            if (result.isConfirmed) {
-              localStorage.removeItem('usuario');
-              this.router.navigate(['auth/login']);
-              Swal.fire({
-                title: "Correcto!",
-                text: "Ha cerrado sesión correctamente.",
-                icon: "success"
-              });
+        });
+        if (resultado.isConfirmed) {
+            try {
+                await this.crearLogAcceso();
+                this.localStorageService.removeUsuario();
+                await this.router.navigate(['auth/login']);
+                Swal.fire({
+                    title: "Correcto!",
+                    text: "Ha cerrado sesión correctamente.",
+                    icon: "success"
+                });
+            } catch (error) {
+                Swal.fire({
+                    title: "Error!",
+                    text: "Hubo un problema al cerrar sesión.",
+                    icon: "error"
+                });
             }
+        }
+    }
+
+    async crearLogAcceso() {
+        try {
+          const ipInfo: any = await firstValueFrom(this.logAccesosService.getIpInfo());
+          const logAcceso: any = {
+            ip: ipInfo.ip,
+            accion: 'Cierre de sesión',
+            ciudad: ipInfo.city,
+            pais: ipInfo.country,
+            detalle: navigator.appVersion,
+            id_usuario: this.localStorageService.getUsuario().id
+          }
+          await firstValueFrom(this.logAccesosService.createLogAcceso(logAcceso));
+        } catch (error: any) {
+          Swal.fire({
+            title: `Error!`,
+            text: error,
+            icon: "error"
           });
+        }
     }
 }

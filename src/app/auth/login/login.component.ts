@@ -6,8 +6,11 @@ import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angu
 import { PasswordModule } from 'primeng/password';
 import { InputTextModule } from 'primeng/inputtext';
 import { Router, RouterModule } from '@angular/router';
-import { LoginService } from './login.service';
+import { AuthService } from '../auth.service';
 import Swal from 'sweetalert2';
+import { firstValueFrom } from 'rxjs';
+import { LogAccesosService } from '../../log-accesos/log-accesos.service';
+import { LocalStorageService } from '../../shared/services/local-storage.service';
 
 @Component({
   selector: 'app-login',
@@ -24,11 +27,13 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private loginService: LoginService,
+    private authService: AuthService,
+    private logAccesosService: LogAccesosService,
+    private localStorageService: LocalStorageService,
     private router: Router
   ) {}
 
-  iniciarSesion() {
+  async iniciarSesion() {
     if (this.formLogin.invalid) {
       this.formLogin.markAllAsTouched();
       return;
@@ -37,18 +42,38 @@ export class LoginComponent {
       email: this.formLogin.value.email,
       password: this.formLogin.value.password
     };
-    this.loginService.login(login).subscribe({
-      next: (data) => {
-        localStorage.setItem('usuario', JSON.stringify(data));
-        this.router.navigate(['']);
-      },
-      error: (error) => {
-        Swal.fire({
-          title: `Error ${error.status}!`,
-          text: error.error.message,
-          icon: "error"
-        });
+    try {
+      const data: any = await firstValueFrom(this.authService.login(login));
+      this.localStorageService.setUsuario(data);
+      await this.crearLogAcceso(data.id);
+      this.router.navigate(['']);
+    } catch (error: any) {
+      Swal.fire({
+        title: `Error ${error.status}!`,
+        text: error.error.message,
+        icon: "error"
+      });
+    }
+  }
+
+  async crearLogAcceso(idUsuario: number) {
+    try {
+      const ipInfo: any = await firstValueFrom(this.logAccesosService.getIpInfo());
+      const logAcceso: any = {
+        ip: ipInfo.ip,
+        accion: 'Inicio de sesión',
+        ciudad: ipInfo.city,
+        pais: ipInfo.country,
+        detalle: navigator.appVersion,
+        id_usuario: idUsuario
       }
-    });
+      await firstValueFrom(this.logAccesosService.createLogAcceso(logAcceso));
+    } catch (error: any) {
+      Swal.fire({
+        title: `Error!`,
+        text: error.message,
+        icon: "error"
+      });
+    }
   }
 }
