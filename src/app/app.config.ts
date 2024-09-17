@@ -9,6 +9,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import { authInfoInterceptor } from './auth/auth-info.interceptor';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { errorHandlerInterceptor } from './shared/interceptors/error-handler.interceptor';
 
 registerLocaleData(localeEs, 'es');
 
@@ -17,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideAnimationsAsync(),
     importProvidersFrom(HttpClientModule, SweetAlert2Module.forRoot()),
-    provideHttpClient(withInterceptors([authInfoInterceptor])),
+    provideHttpClient(withInterceptors([authInfoInterceptor, errorHandlerInterceptor])),
     MessageService,
     { provide: LOCALE_ID, useValue: 'es' }
   ]

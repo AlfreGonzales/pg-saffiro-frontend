@@ -21,13 +21,9 @@ export const loginGuard: CanActivateFn = async (route, state) => {
   } catch (error: any) {
     if (error.status === 401) {
       router.navigate(['auth/login']);
-      Swal.fire({
-        title: `Error ${error.status}!`,
-        text: "Acceso no autorizado.",
-        icon: "error"
-      });
+      console.error('Acceso no autorizado por el guard', error);
     } else {
-      console.error('Error al verificar el token.', error.message)
+      console.error('Error al verificar el token', error);
     }
     return false;
   }

@@ -60,11 +60,7 @@ export class AppTopBarComponent implements OnInit {
                     icon: "success"
                 });
             } catch (error) {
-                Swal.fire({
-                    title: "Error!",
-                    text: "Hubo un problema al cerrar sesión.",
-                    icon: "error"
-                });
+                console.error(error);
             }
         }
     }
@@ -81,12 +77,8 @@ export class AppTopBarComponent implements OnInit {
             id_usuario: this.localStorageService.getUsuario().id
           }
           await firstValueFrom(this.logAccesosService.createLogAcceso(logAcceso));
-        } catch (error: any) {
-          Swal.fire({
-            title: `Error!`,
-            text: error,
-            icon: "error"
-          });
+        } catch (error) {
+          console.error(error);
         }
     }
 }

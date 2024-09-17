@@ -47,12 +47,8 @@ export class LoginComponent {
       this.localStorageService.setUsuario(data);
       await this.crearLogAcceso(data.id);
       this.router.navigate(['']);
-    } catch (error: any) {
-      Swal.fire({
-        title: `Error ${error.status}!`,
-        text: error.error.message,
-        icon: "error"
-      });
+    } catch (error) {
+      console.error(error);
     }
   }
 
@@ -68,12 +64,8 @@ export class LoginComponent {
         id_usuario: idUsuario
       }
       await firstValueFrom(this.logAccesosService.createLogAcceso(logAcceso));
-    } catch (error: any) {
-      Swal.fire({
-        title: `Error!`,
-        text: error.message,
-        icon: "error"
-      });
+    } catch (error) {
+      console.error(error);
     }
   }
 }

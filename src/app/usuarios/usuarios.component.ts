@@ -119,7 +119,7 @@ export class UsuariosComponent implements OnInit {
       next: (data) => {
         this.listaUsuarios = data;
       },
-      error: (error) => console.error('Error al listar los usuarios!', error),
+      error: (error) => console.error('Error al listar los usuarios', error),
     });
 
     this.cols = [
@@ -143,14 +143,16 @@ export class UsuariosComponent implements OnInit {
     this.rolesService.findAll().subscribe({
       next: (data) => {
         this.listaRoles = data;
-        this.listaRolesDropdown = this.listaRoles.map((rol) => {
+        this.listaRolesDropdown = this.listaRoles
+        .filter((rol) => rol.estado_logico === true)
+        .map((rol) => {
           return {
             name: rol.nombre,
             code: rol.id
           };
         });
       },
-      error: (error) => console.error('Error al listar los roles!', error),
+      error: (error) => console.error('Error al listar los roles', error),
     });
   }
 
@@ -179,7 +181,7 @@ export class UsuariosComponent implements OnInit {
             icon: "success"
           });
         },
-        error: (err) => console.error('Error al crear el usuario', err),
+        error: (error) => console.error('Error al crear el usuario', error)
       });
     } else {
       const usuario: any = {
@@ -199,7 +201,7 @@ export class UsuariosComponent implements OnInit {
             icon: "success"
           });
         },
-        error: (err) => console.error('Error al editar el usuario', err),
+        error: (error) => console.error('Error al editar el usuario', error),
       });
     }
   }
@@ -209,7 +211,7 @@ export class UsuariosComponent implements OnInit {
       next: (data) => {
         this.obtenerLista();
       },
-      error: (err) => console.error(err.message)
+      error: (error) => console.error(error)
     });
     Swal.fire({
       title: "Inactivado!",

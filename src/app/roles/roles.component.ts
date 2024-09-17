@@ -109,7 +109,7 @@ export class RolesComponent implements OnInit {
       next: (data) => {
         this.listaRoles = data;
       },
-      error: (error) => console.error('Error al listar los roles!', error),
+      error: (error) => console.error('Error al listar los roles', error),
     });
 
     this.cols = [
@@ -141,7 +141,7 @@ export class RolesComponent implements OnInit {
             icon: "success"
           });
         },
-        error: (err) => console.error('Error al crear el rol', err),
+        error: (error) => console.error('Error al crear el rol', error),
       });
     } else {
       const rol: any = {
@@ -158,7 +158,7 @@ export class RolesComponent implements OnInit {
             icon: "success"
           });
         },
-        error: (err) => console.error('Error al editar el rol', err),
+        error: (error) => console.error('Error al editar el rol', error),
       });
     }
   }
@@ -168,7 +168,7 @@ export class RolesComponent implements OnInit {
       next: (data) => {
         this.obtenerLista();
       },
-      error: (err) => console.error(err.message)
+      error: (error) => console.error(error)
     });
     Swal.fire({
       title: "Inactivado!",

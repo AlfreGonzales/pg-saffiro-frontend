@@ -17,9 +17,9 @@ export const authResolver: ResolveFn<boolean> = (route, state) => {
     catchError((error) => {
       if (error.status === 401) {
         router.navigate(['auth/login']);
-        console.error('Acceso no autorizado por el resolver', error.message);
+        console.error('Acceso no autorizado por el resolver', error);
       } else {
-        console.error('Error al obtener la información del autenticación', error.message);
+        console.error('Error al obtener la información del autenticación', error);
       }
       return of(false);
     })

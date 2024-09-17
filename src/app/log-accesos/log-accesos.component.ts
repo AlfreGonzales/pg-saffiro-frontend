@@ -35,7 +35,7 @@ export class LogAccesosComponent implements OnInit {
       next: (data) => {
         this.listaLogAccesos = data;
       },
-      error: (error) => console.error('Error al listar los log de accesos!', error),
+      error: (error) => console.error('Error al listar los log de accesos', error),
     });
 
     this.cols = [
