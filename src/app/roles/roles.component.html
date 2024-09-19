@@ -24,6 +24,7 @@
                     <tr>
                         <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"></p-sortIcon></th>
                         <th pSortableColumn="modulos">Módulos<p-sortIcon field="modulos"></p-sortIcon></th>
+                        <th pSortableColumn="created_at">Fecha de registro<p-sortIcon field="created_at"></p-sortIcon></th>
                         <th pSortableColumn="estado_logico">Estado<p-sortIcon field="estado_logico"></p-sortIcon></th>
                         <th></th>
                     </tr>
@@ -37,12 +38,15 @@
                             {{ rol.modulos }}
                         </td>
                         <td>
-                            <p-tag [value]="rol.estado_logico ? 'ACTIVO' : 'INACTIVO'" [severity]="rol.estado_logico ? 'success' : 'warning'" />
+                            {{ rol.created_at | date:'dd/MM/yyyy' }}
+                        </td>
+                        <td>
+                            <p-tag [rounded]="true" [value]="rol.estado_logico ? 'ACTIVO' : 'INACTIVO'" [severity]="rol.estado_logico ? 'success' : 'danger'" />
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editRol(rol)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" [swal]="alertaBorrar" (confirm)="inactivar(rol)"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="mr-2" size="large" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="editRol(rol)"></button>
+                                <button pButton pRipple icon="pi pi-trash" size="large" [rounded]="true" [text]="true" [raised]="true" severity="danger" [swal]="alertaBorrar" (confirm)="inactivar(rol)"></button>
                             </div>
                         </td>
                     </tr>

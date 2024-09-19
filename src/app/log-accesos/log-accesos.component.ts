@@ -10,7 +10,7 @@ import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 
 import { CommonModule } from '@angular/common';
-import { LogAcceso } from '../auth/login/interfaces/log-acceso';
+import { LogAcceso } from './interfaces/log-acceso';
 import { LogAccesosService } from './log-accesos.service';
 
 @Component({

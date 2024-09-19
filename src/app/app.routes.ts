@@ -8,6 +8,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { loginGuard } from './auth/login/login.guard';
 import { LogAccesosComponent } from './log-accesos/log-accesos.component';
 import { authResolver } from './auth/auth.resolver';
+import { ProyectosComponent } from './proyectos/proyectos.component';
 
 export const routes: Routes = [
   {
@@ -43,6 +44,12 @@ export const routes: Routes = [
         path: 'log-accesos',
         component: LogAccesosComponent,
         title: 'Log de accesos',
+        canActivate: [loginGuard]
+      },
+      {
+        path: 'proyectos',
+        component: ProyectosComponent,
+        title: 'Proyectos',
         canActivate: [loginGuard]
       }
     ],

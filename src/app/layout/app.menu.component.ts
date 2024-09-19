@@ -39,8 +39,8 @@ export class AppMenuComponent implements OnInit {
             {
                 label: 'Proyectos',
                 items: [
-                    { id: Modulos.TAREAS, label: 'Tareas', icon: 'pi pi-fw pi-book', routerLink: ['/tareas'] },
                     { id: Modulos.PROYECTOS, label: 'Proyectos', icon: 'pi pi-fw pi-th-large', routerLink: ['/proyectos'] },
+                    { id: Modulos.TAREAS, label: 'Tareas', icon: 'pi pi-fw pi-book', routerLink: ['/tareas'] },
                     { id: Modulos.EMPRESAS, label: 'Empresas', icon: 'pi pi-fw pi-building', routerLink: ['/empresas'] }
                 ]
             }

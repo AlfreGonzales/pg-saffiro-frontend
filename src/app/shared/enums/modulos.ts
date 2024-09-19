@@ -3,7 +3,7 @@ export enum Modulos {
     ROLES = 'roles',
     USUARIOS = 'usuarios',
     LOG_ACCESOS = 'logAccesos',
-    TAREAS = 'tareas',
     PROYECTOS = 'proyectos',
+    TAREAS = 'tareas',
     EMPRESAS = 'empresas'
 }

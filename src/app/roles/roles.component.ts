@@ -65,7 +65,8 @@ export class RolesComponent implements OnInit {
     { name: Modulos.DASHBOARDS },
     { name: Modulos.ROLES },
     { name: Modulos.USUARIOS},
-    { name: Modulos.LOG_ACCESOS }
+    { name: Modulos.LOG_ACCESOS },
+    { name: Modulos.PROYECTOS }
   ];
   
   productDialog: boolean = false;
@@ -115,6 +116,7 @@ export class RolesComponent implements OnInit {
     this.cols = [
       { field: 'nombre', header: 'Nombre' },
       { field: 'modulos', header: 'Módulos' },
+      { field: 'created_at', header: 'Fecha de registro' },
       { field: 'estado_logico', header: 'Estado' },
     ];
   }

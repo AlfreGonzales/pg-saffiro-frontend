@@ -10,7 +10,7 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="listaUsuarios" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['ci', 'nombres','apellidos','email', 'rol.nombre', 'created_at']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
+            <p-table #dt [value]="listaUsuarios" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['ci', 'nombres','apellidos','email', 'rol.nombre']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Lista de usuarios</h5>
@@ -53,12 +53,12 @@
                             {{ usuario.created_at | date:'dd/MM/yyyy' }}
                         </td>
                         <td>
-                            <p-tag [value]="usuario.estado_logico ? 'ACTIVO' : 'INACTIVO'" [severity]="usuario.estado_logico ? 'success' : 'warning'" />
+                            <p-tag [rounded]="true" [value]="usuario.estado_logico ? 'ACTIVO' : 'INACTIVO'" [severity]="usuario.estado_logico ? 'success' : 'danger'" />
                         </td>
                         <td>
                             <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" (click)="editUsuario(usuario)"></button>
-                                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" [swal]="alertaBorrar" (confirm)="inactivar(usuario)"></button>
+                                <button pButton pRipple icon="pi pi-pencil" class="mr-2" size="large" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="editUsuario(usuario)"></button>
+                                <button pButton pRipple icon="pi pi-trash" size="large" [rounded]="true" [text]="true" [raised]="true" severity="danger" [swal]="alertaBorrar" (confirm)="inactivar(usuario)"></button>
                             </div>
                         </td>
                     </tr>
@@ -115,7 +115,12 @@
             
                 <div class="field" [ngStyle]="{'display': !editting ? 'block' : 'none'}">
                     <label for="password">Contraseña</label>
-                    <p-password formControlName="password" [toggleMask]="true" inputId="password" />
+                    <p-password formControlName="password"
+                        promptLabel="Elige una contraseña"
+                        weakLabel="Muy simple"
+                        mediumLabel="Moderada"
+                        strongLabel="Segura"
+                        [toggleMask]="true" inputId="password" />
                     @if (formUsuario.get('password')?.hasError('required') && formUsuario.get('password')?.touched) {
                     <small> El campo constraseña es requerido </small>
                     }

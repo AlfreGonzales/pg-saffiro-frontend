@@ -3,4 +3,5 @@ export interface Rol {
     nombre: string;
     modulos: string;
     estado_logico: boolean;
+    created_at: Date;
 }

@@ -1,0 +1,122 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toast></p-toast>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nuevo Proyecto" icon="pi pi-plus" class="p-button-success mr-2" (click)="abrirModalCrear()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+
+            <p-table #dt [value]="listaProyectos" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['nombre', 'descripcion']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Lista de proyectos</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"></p-sortIcon></th>
+                        <th pSortableColumn="modulos">Descripción<p-sortIcon field="descripcion"></p-sortIcon></th>
+                        <th pSortableColumn="created_at">Costo estimado<p-sortIcon field="costo_estimado"></p-sortIcon></th>
+                        <th pSortableColumn="estado_logico">Fecha de inicio<p-sortIcon field="fecha_inicio"></p-sortIcon></th>
+                        <th pSortableColumn="modulos">Fecha de finalización<p-sortIcon field="fecha_fin"></p-sortIcon></th>
+                        <th pSortableColumn="estado_logico">Estado<p-sortIcon field="estado"></p-sortIcon></th>
+                        <th pSortableColumn="created_at">Fecha de registro<p-sortIcon field="created_at"></p-sortIcon></th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-proyecto>
+                    <tr>
+                        <td>
+                            {{ proyecto.nombre }}
+                        </td>
+                        <td>
+                            {{ proyecto.descripcion }}
+                        </td>
+                        <td>
+                            {{ proyecto.costo_estimado | currency:'Bs.' }}
+                        </td>
+                        <td>
+                            {{ proyecto.fecha_inicio | date:'dd/MM/yyyy' }}
+                        </td>
+                        <td>
+                            {{ proyecto.fecha_fin | date:'dd/MM/yyyy' }}
+                        </td>
+                        <td>
+                            <p-tag [rounded]="true" [value]="proyecto.estado" />
+                        </td>
+                        <td>
+                            {{ proyecto.created_at | date:'dd/MM/yyyy' }}
+                        </td>
+                        <td>
+                            <div class="flex">
+                                <button pButton pRipple icon="pi pi-pencil" size="large" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="abrirModalEditar(proyecto)"></button>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <p-dialog [(visible)]="productDialog" [style]="{width: '500px'}" header="Nuevo Proyecto" [modal]="true" class="p-fluid">
+            <form [formGroup]="formProyecto" (ngSubmit)="crearProyecto()">
+
+                    <div class="field">
+                        <label for="nombre">Nombre</label>
+                        <input type="text" pInputText formControlName="nombre" id="nombre" />
+                        @if (formProyecto.get('nombre')?.hasError('required') && formProyecto.get('nombre')?.touched) {
+                        <small> El campo nombre es requerido </small>
+                        }
+                        @if (formProyecto.get('nombre')?.hasError('minlength') && formProyecto.get('nombre')?.touched) {
+                        <small> El campo nombre debe tener al menos 3 caracteres </small>
+                        }
+                    </div>
+
+                    <div class="field">
+                        <label for="descripcion">Descripción</label>
+                        <input type="text" pInputText formControlName="descripcion" id="descripcion" />
+                        @if (formProyecto.get('descripcion')?.hasError('required') && formProyecto.get('descripcion')?.touched) {
+                        <small> El campo descripción es requerido </small>
+                        }
+                    </div>
+
+                    <div class="field">
+                        <label for="costo_estimado">Costo estimado</label>
+                        <p-inputNumber formControlName="costo_estimado"
+                            mode="decimal"
+                            prefix="Bs. "
+                            [useGrouping]="false"
+                            [minFractionDigits]="2"
+                            [maxFractionDigits]="2" inputId="costo_estimado" /> 
+                        @if (formProyecto.get('costo_estimado')?.hasError('required') && formProyecto.get('costo_estimado')?.touched) {
+                        <small> El campo costo estimado es requerido </small>
+                        }
+                    </div>
+
+                    <div class="field">
+                        <label for="fecha_inicio_fin">Fecha de inicio y fecha de finalización</label>
+                        <p-calendar formControlName="fecha_inicio_fin"
+                            selectionMode="range"
+                            dateFormat="dd/mm/yy"
+                            [readonlyInput]="true"
+                            [appendTo]="'body'" inputId="fecha_inicio_fin" />
+                        @if (formProyecto.get('fecha_inicio_fin')?.hasError('required') && formProyecto.get('fecha_inicio_fin')?.touched) {
+                        <small> El campo fecha de inicio y fin es requerido </small>
+                        }
+                    </div>
+                    
+                    <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" type="button" (click)="cerrarModal()"></button>
+                    <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" type="submit"></button>
+
+            </form>
+        </p-dialog>
+
+    </div>
+</div>

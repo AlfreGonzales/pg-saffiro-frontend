@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { appSettings } from '../settings/appSettings';
-import { LogAcceso } from '../auth/login/interfaces/log-acceso';
+import { LogAcceso } from './interfaces/log-acceso';
 
 @Injectable({
   providedIn: 'root'
