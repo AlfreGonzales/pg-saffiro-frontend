@@ -17,6 +17,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
 import { PasswordModule } from 'primeng/password';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { ChipModule } from 'primeng/chip';
 
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
@@ -53,7 +54,8 @@ interface Modulo {
     TagModule,
     SweetAlert2Module,
     PasswordModule,
-    MultiSelectModule
+    MultiSelectModule,
+    ChipModule
   ],
   templateUrl: './roles.component.html',
   styleUrl: './roles.component.scss'
@@ -134,7 +136,7 @@ export class RolesComponent implements OnInit {
         modulos: resultado
       };
       this.rolesService.create(rol).subscribe({
-        next: (data) => {
+        next: () => {
           this.productDialog = false;
           this.obtenerLista();
           Swal.fire({
@@ -151,7 +153,7 @@ export class RolesComponent implements OnInit {
         modulos: resultado
       };
       this.rolesService.update(this.idRol, rol).subscribe({
-        next: (data) => {
+        next: () => {
           this.productDialog = false;
           this.obtenerLista();
           Swal.fire({
@@ -167,7 +169,7 @@ export class RolesComponent implements OnInit {
 
   inactivar(rol: Rol) {
     this.rolesService.remove(rol.id).subscribe({
-      next: (data) => {
+      next: () => {
         this.obtenerLista();
       },
       error: (error) => console.error(error)

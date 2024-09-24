@@ -8,7 +8,8 @@ import { LoginComponent } from './auth/login/login.component';
 import { loginGuard } from './auth/login/login.guard';
 import { LogAccesosComponent } from './log-accesos/log-accesos.component';
 import { authResolver } from './auth/auth.resolver';
-import { ProyectosComponent } from './proyectos/proyectos.component';
+import { ListadoProyectosComponent } from './proyectos/listado-proyectos/listado-proyectos.component';
+import { TableroProyectosComponent } from './proyectos/tablero-proyectos/tablero-proyectos.component';
 
 export const routes: Routes = [
   {
@@ -19,7 +20,6 @@ export const routes: Routes = [
   {
     path: '',
     component: AppLayoutComponent,
-    title: 'Inicio',
     resolve: { authInfo: authResolver },
     children: [
       {
@@ -48,9 +48,20 @@ export const routes: Routes = [
       },
       {
         path: 'proyectos',
-        component: ProyectosComponent,
-        title: 'Proyectos',
-        canActivate: [loginGuard]
+        children: [
+          {
+            path: 'tablero',
+            component: TableroProyectosComponent,
+            title: 'Tablero de proyectos',
+            canActivate: [loginGuard]
+          },
+          {
+            path: 'listado',
+            component: ListadoProyectosComponent,
+            title: 'Listado de proyectos',
+            canActivate: [loginGuard]
+          },
+        ]
       }
     ],
   },

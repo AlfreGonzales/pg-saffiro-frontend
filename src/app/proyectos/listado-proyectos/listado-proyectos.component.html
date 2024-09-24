@@ -1,15 +1,15 @@
 <div class="grid">
     <div class="col-12">
         <div class="card px-6 py-6">
-            <p-toast></p-toast>
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
+                    <p-button icon="pi pi-arrow-left" size="large" [text]="true" [raised]="true" severity="secondary" class="mr-3" routerLink="../tablero" />
                     <div class="my-2">
-                        <button pButton pRipple label="Nuevo Proyecto" icon="pi pi-plus" class="p-button-success mr-2" (click)="abrirModalCrear()"></button>
+                        <button pButton pRipple label="Nuevo Proyecto" icon="pi pi-plus" class="p-button-success"
+                            (click)="abrirModalCrear()"></button>
                     </div>
                 </ng-template>
             </p-toolbar>
-
             <p-table #dt [value]="listaProyectos" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['nombre', 'descripcion']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" selectionMode="multiple" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -23,11 +23,11 @@
                 <ng-template pTemplate="header">
                     <tr>
                         <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"></p-sortIcon></th>
-                        <th pSortableColumn="modulos">Descripción<p-sortIcon field="descripcion"></p-sortIcon></th>
-                        <th pSortableColumn="created_at">Costo estimado<p-sortIcon field="costo_estimado"></p-sortIcon></th>
-                        <th pSortableColumn="estado_logico">Fecha de inicio<p-sortIcon field="fecha_inicio"></p-sortIcon></th>
-                        <th pSortableColumn="modulos">Fecha de finalización<p-sortIcon field="fecha_fin"></p-sortIcon></th>
-                        <th pSortableColumn="estado_logico">Estado<p-sortIcon field="estado"></p-sortIcon></th>
+                        <th pSortableColumn="descripcion">Descripción<p-sortIcon field="descripcion"></p-sortIcon></th>
+                        <th pSortableColumn="costo_estimado">Costo estimado<p-sortIcon field="costo_estimado"></p-sortIcon></th>
+                        <th pSortableColumn="fecha_inicio">Fecha de inicio<p-sortIcon field="fecha_inicio"></p-sortIcon></th>
+                        <th pSortableColumn="fecha_fin">Fecha de finalización<p-sortIcon field="fecha_fin"></p-sortIcon></th>
+                        <th pSortableColumn="estado">Estado<p-sortIcon field="estado"></p-sortIcon></th>
                         <th pSortableColumn="created_at">Fecha de registro<p-sortIcon field="created_at"></p-sortIcon></th>
                         <th></th>
                     </tr>
@@ -50,7 +50,10 @@
                             {{ proyecto.fecha_fin | date:'dd/MM/yyyy' }}
                         </td>
                         <td>
-                            <p-tag [rounded]="true" [value]="proyecto.estado" />
+                            <p-tag [rounded]="true" [value]="proyecto.estado.toUpperCase()"
+                                [style]="{ background: proyecto.estado === estado.PLANIFICADO ? 'var(--blue-400)' :
+                                proyecto.estado === estado.EN_CURSO ? 'var(--yellow-400)' :
+                                proyecto.estado === estado.ACABADO ? 'var(--green-400)' : 'var(--gray-400)' }" />
                         </td>
                         <td>
                             {{ proyecto.created_at | date:'dd/MM/yyyy' }}
