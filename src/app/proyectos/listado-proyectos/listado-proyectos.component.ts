@@ -1,20 +1,23 @@
-import { Component } from '@angular/core';
-import { sharedImports } from '../shared/shared-imports';
-import { Proyecto } from './interfaces/proyecto';
-import Swal from 'sweetalert2';
+import { Component, OnInit } from '@angular/core';
+import { sharedImports } from '@shared/shared-imports';
+import { Proyecto } from '@proyectos/interfaces/proyecto';
+import { ProyectosService } from '@proyectos/proyectos.service';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ProyectosService } from './proyectos.service';
+import Swal from 'sweetalert2';
 import { Table } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
+import { EstadoProyecto } from '@proyectos/enums/estados-proyecto';
 
 @Component({
-  selector: 'app-proyectos',
+  selector: 'app-listado-proyectos',
   standalone: true,
   imports: [...sharedImports, CalendarModule],
-  templateUrl: './proyectos.component.html',
-  styleUrl: './proyectos.component.scss'
+  templateUrl: './listado-proyectos.component.html',
+  styleUrl: './listado-proyectos.component.scss'
 })
-export class ProyectosComponent {
+export class ListadoProyectosComponent implements OnInit {
+  estado = EstadoProyecto;
+
   listaProyectos!: Proyecto[];
   
   productDialog: boolean = false;
@@ -103,7 +106,7 @@ export class ProyectosComponent {
         fecha_fin: fechaFin
       };
       this.proyectosService.create(proyecto).subscribe({
-        next: (data) => {
+        next: () => {
           this.productDialog = false;
           this.obtenerLista();
           Swal.fire({
@@ -123,7 +126,7 @@ export class ProyectosComponent {
         fecha_fin: fechaFin
       };
       this.proyectosService.update(this.idProyecto, proyecto).subscribe({
-        next: (data) => {
+        next: () => {
           this.productDialog = false;
           this.obtenerLista();
           Swal.fire({

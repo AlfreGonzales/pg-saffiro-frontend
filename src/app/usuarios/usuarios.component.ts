@@ -172,7 +172,7 @@ export class UsuariosComponent implements OnInit {
         id_rol: id_rol.code
       };
       this.usuariosService.create(usuario).subscribe({
-        next: (data) => {
+        next: () => {
           this.productDialog = false;
           this.obtenerLista();
           Swal.fire({
@@ -192,7 +192,7 @@ export class UsuariosComponent implements OnInit {
         id_rol: id_rol.code
       };
       this.usuariosService.update(this.idUsuario, usuario).subscribe({
-        next: (data) => {
+        next: () => {
           this.productDialog = false;
           this.obtenerLista();
           Swal.fire({
@@ -208,7 +208,7 @@ export class UsuariosComponent implements OnInit {
 
   inactivar(usuario: Usuario) {
     this.usuariosService.remove(usuario.id).subscribe({
-      next: (data) => {
+      next: () => {
         this.obtenerLista();
       },
       error: (error) => console.error(error)

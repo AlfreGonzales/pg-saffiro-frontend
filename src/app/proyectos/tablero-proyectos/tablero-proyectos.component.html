@@ -1,0 +1,88 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h2 class="font-bold">Tablero de proyectos</h2>
+            <button pButton pRipple label="Listado de proyectos" icon="pi pi-list" size="large" [text]="true" [raised]="true" severity="success" class="mb-3" routerLink="../listado"></button>
+            <div class="grid" cdkDropListGroup>
+                <div class="col">
+                    <div class="card min-h-full" [ngStyle]="{backgroundColor:'var(--blue-100)'}">
+                        <h2>Planificado</h2>
+                        <div cdkDropList [cdkDropListData]="proyectosPlanificados" (cdkDropListDropped)="drop($event, estado.PLANIFICADO)">
+                            @for (item of proyectosPlanificados; track item.id) {
+                            <div class="card" cdkDrag [cdkDragData]="item" (contextmenu)="onContextMenu($event, item)">
+                                <div class="flex justify-content-between mb-3">
+                                    <div>
+                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.nombre }}</span>
+                                        <div class="text-500 font-medium">{{ item.fecha_inicio | date:'dd/MM/yyyy' }}</div>
+                                    </div>
+                                    <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
+                                        style="width: 2.5rem; height: 2.5rem">
+                                        <i class="pi pi-box text-blue-500 text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="flex justify-content-between mb-3">
+                                    <span class="text-green-500 font-medium">Nombre del equipo</span>
+                                    <p-tag [rounded]="true" [value]="estado.PLANIFICADO.toUpperCase()" [severity]="'info'" />
+                                </div>
+                            </div>
+                            }
+                        </div>
+                        <p-contextMenu #cm [model]="items" />
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card min-h-full" [ngStyle]="{backgroundColor:'var(--yellow-100)'}">
+                        <h2>En curso</h2>
+                        <div cdkDropList [cdkDropListData]="proyectosEnCurso" (cdkDropListDropped)="drop($event, estado.EN_CURSO)">
+                            @for (item of proyectosEnCurso; track item.id) {
+                            <div class="card" cdkDrag [cdkDragData]="item">
+                                <div class="flex justify-content-between mb-3">
+                                    <div>
+                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.nombre }}</span>
+                                        <div class="text-500 font-medium">{{ item.fecha_inicio | date:'dd/MM/yyyy' }}</div>
+                                    </div>
+                                    <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
+                                        style="width: 2.5rem; height: 2.5rem">
+                                        <i class="pi pi-box text-blue-500 text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="flex justify-content-between mb-3">
+                                    <span class="text-green-500 font-medium">Nombre del equipo</span>
+                                    <p-tag [rounded]="true" [value]="estado.EN_CURSO.toUpperCase()" [severity]="'warning'" />
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card min-h-full" [ngStyle]="{backgroundColor:'var(--green-100)'}">
+                        <h2>Acabado</h2>
+                        <div cdkDropList [cdkDropListData]="proyectosAcabados" (cdkDropListDropped)="drop($event, estado.ACABADO)">
+                            @for (item of proyectosAcabados; track item.id) {
+                            <div class="card" cdkDrag [cdkDragData]="item">
+                                <div class="flex justify-content-between mb-3">
+                                    <div>
+                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.nombre }}</span>
+                                        <div class="text-500 font-medium">{{ item.fecha_inicio | date:'dd/MM/yyyy' }}</div>
+                                    </div>
+                                    <div class="flex align-items-center justify-content-center bg-blue-100 border-round"
+                                        style="width: 2.5rem; height: 2.5rem">
+                                        <i class="pi pi-box text-blue-500 text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="flex justify-content-between mb-3">
+                                    <span class="text-green-500 font-medium">Nombre del equipo</span>
+                                    <p-tag [rounded]="true" [value]="estado.ACABADO.toUpperCase()" [severity]="'success'" />
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

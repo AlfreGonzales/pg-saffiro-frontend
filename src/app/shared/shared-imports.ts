@@ -1,46 +1,41 @@
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
-import { TableModule } from 'primeng/table';
-import { FileUploadModule } from 'primeng/fileupload';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
-import { RatingModule } from 'primeng/rating';
+import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { DropdownModule } from 'primeng/dropdown';
-import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { DropdownModule } from 'primeng/dropdown';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { DialogModule } from 'primeng/dialog';
 import { TagModule } from 'primeng/tag';
-import { PasswordModule } from 'primeng/password';
-import { MultiSelectModule } from 'primeng/multiselect';
 
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 export const sharedImports = [
     CommonModule,
-    TableModule,
+    RouterModule,
     ReactiveFormsModule,
     FormsModule,
-    FileUploadModule,
     ButtonModule,
     RippleModule,
-    ToastModule,
     ToolbarModule,
-    RatingModule,
+    TableModule,
     InputTextModule,
     InputTextareaModule,
-    DropdownModule,
-    RadioButtonModule,
     InputNumberModule,
+    DropdownModule,
+    MultiSelectModule,
+    RadioButtonModule,
     DialogModule,
     TagModule,
-    SweetAlert2Module,
-    PasswordModule,
-    MultiSelectModule
+    SweetAlert2Module
 ];
 
 export const sharedProviders = [
