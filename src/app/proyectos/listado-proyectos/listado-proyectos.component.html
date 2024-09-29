@@ -5,7 +5,7 @@
                 <ng-template pTemplate="left">
                     <p-button icon="pi pi-arrow-left" size="large" [text]="true" [raised]="true" severity="secondary" class="mr-3" routerLink="../tablero" />
                     <div class="my-2">
-                        <button pButton pRipple label="Nuevo Proyecto" icon="pi pi-plus" class="p-button-success"
+                        <button pButton pRipple label="Nuevo proyecto" icon="pi pi-plus" class="p-button-success"
                             (click)="abrirModalCrear()"></button>
                     </div>
                 </ng-template>
@@ -68,7 +68,7 @@
             </p-table>
         </div>
 
-        <p-dialog [(visible)]="productDialog" [style]="{width: '500px'}" header="Nuevo Proyecto" [modal]="true" class="p-fluid">
+        <p-dialog [(visible)]="productDialog" [style]="{width: '500px'}" header="Nuevo proyecto" [modal]="true" class="p-fluid">
             <form [formGroup]="formProyecto" (ngSubmit)="crearProyecto()">
 
                     <div class="field">

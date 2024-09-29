@@ -10,6 +10,8 @@ import { LogAccesosComponent } from './log-accesos/log-accesos.component';
 import { authResolver } from './auth/auth.resolver';
 import { ListadoProyectosComponent } from './proyectos/listado-proyectos/listado-proyectos.component';
 import { TableroProyectosComponent } from './proyectos/tablero-proyectos/tablero-proyectos.component';
+import { TableroTareasComponent } from './tareas/tablero-tareas/tablero-tareas.component';
+import { ListadoTareasComponent } from './tareas/listado-tareas/listado-tareas.component';
 
 export const routes: Routes = [
   {
@@ -62,7 +64,24 @@ export const routes: Routes = [
             canActivate: [loginGuard]
           },
         ]
-      }
+      },
+      {
+        path: 'tareas',
+        children: [
+          {
+            path: 'tablero',
+            component: TableroTareasComponent,
+            title: 'Tablero de tareas',
+            canActivate: [loginGuard]
+          },
+          {
+            path: 'listado',
+            component: ListadoTareasComponent,
+            title: 'Listado de tareas',
+            canActivate: [loginGuard]
+          },
+        ]
+      },
     ],
   },
   { path: 'notfound', component: NotfoundComponent },

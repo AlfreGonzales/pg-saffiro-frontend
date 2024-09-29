@@ -1,0 +1,201 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h2 class="font-bold">Tablero de tareas</h2>
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <button pButton pRipple label="Listado de tareas" icon="pi pi-list" size="large" [text]="true" [raised]="true" severity="success" class="mr-3" routerLink="../listado"></button>
+                    <div class="my-2">
+                        <button pButton pRipple label="Nueva tarea" icon="pi pi-plus" class="p-button-success"
+                            (click)="abrirModalCrear()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+            <div class="grid" cdkDropListGroup>
+                <div class="col">
+                    <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.NUEVA)[0]}">
+                        <h2>Nueva</h2>
+                        <div cdkDropList [cdkDropListData]="tareasNuevas" (cdkDropListDropped)="drop($event, estado.NUEVA)">
+                            @for (item of tareasNuevas; track item.id) {
+                            <div class="card" cdkDrag [cdkDragData]="item" (contextmenu)="onContextMenu($event, item)">
+                                <div class="flex justify-content-between mb-3">
+                                    <div>
+                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
+                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
+                                    </div>
+                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" />
+                                </div>
+                                <div class="flex justify-content-between mb-3">
+                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
+                                    <p-tag [rounded]="true" [value]="estado.NUEVA.toUpperCase()" [style]="{background: coloresEstado.get(estado.NUEVA)[1]}" />
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.EN_CURSO)[0]}">
+                        <h2>En curso</h2>
+                        <div cdkDropList [cdkDropListData]="tareasEnCurso" (cdkDropListDropped)="drop($event, estado.EN_CURSO)">
+                            @for (item of tareasEnCurso; track item.id) {
+                            <div class="card" cdkDrag [cdkDragData]="item" (contextmenu)="onContextMenu($event, item)">
+                                <div class="flex justify-content-between mb-3">
+                                    <div>
+                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
+                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
+                                    </div>
+                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" />
+                                </div>
+                                <div class="flex justify-content-between mb-3">
+                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
+                                    <p-tag [rounded]="true" [value]="estado.EN_CURSO.toUpperCase()" [style]="{background: coloresEstado.get(estado.EN_CURSO)[1]}" />
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.CALIDAD)[0]}">
+                        <h2>Calidad</h2>
+                        <div cdkDropList [cdkDropListData]="tareasCalidad" (cdkDropListDropped)="drop($event, estado.CALIDAD)">
+                            @for (item of tareasCalidad; track item.id) {
+                            <div class="card" cdkDrag [cdkDragData]="item" (contextmenu)="onContextMenu($event, item)">
+                                <div class="flex justify-content-between mb-3">
+                                    <div>
+                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
+                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
+                                    </div>
+                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" />
+                                </div>
+                                <div class="flex justify-content-between mb-3">
+                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
+                                    <p-tag [rounded]="true" [value]="estado.CALIDAD.toUpperCase()" [style]="{background: coloresEstado.get(estado.CALIDAD)[1]}" />
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.CERTIFICACION)[0]}">
+                        <h2>Certificación</h2>
+                        <div cdkDropList [cdkDropListData]="tareasCertificacion" (cdkDropListDropped)="drop($event, estado.CERTIFICACION)">
+                            @for (item of tareasCertificacion; track item.id) {
+                            <div class="card" cdkDrag [cdkDragData]="item" (contextmenu)="onContextMenu($event, item)">
+                                <div class="flex justify-content-between mb-3">
+                                    <div>
+                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
+                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
+                                    </div>
+                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" />
+                                </div>
+                                <div class="flex justify-content-between mb-3">
+                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
+                                    <p-tag [rounded]="true" [value]="estado.CERTIFICACION.toUpperCase()" [style]="{background: coloresEstado.get(estado.CERTIFICACION)[1]}" />
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <p-contextMenu #cm [model]="items" />
+
+                <div class="col">
+                    <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.ACABADA)[0]}">
+                        <h2>Acabada</h2>
+                        <div cdkDropList [cdkDropListData]="tareasAcabadas" (cdkDropListDropped)="drop($event, estado.ACABADA)">
+                            @for (item of tareasAcabadas; track item.id) {
+                            <div class="card" cdkDrag [cdkDragData]="item">
+                                <div class="flex justify-content-between mb-3">
+                                    <div>
+                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
+                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
+                                    </div>
+                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" />
+                                </div>
+                                <div class="flex justify-content-between mb-3">
+                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
+                                    <p-tag [rounded]="true" [value]="estado.ACABADA.toUpperCase()" [style]="{background: coloresEstado.get(estado.ACABADA)[1]}" />
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="tareaDialog" [style]="{width: '500px'}" header="Nueva tarea" [modal]="true" class="p-fluid">
+    <form [formGroup]="formTarea" (ngSubmit)="crearTarea()">
+
+            <div class="field">
+                <label for="nombre">Nombre</label>
+                <input type="text" pInputText formControlName="nombre" id="nombre" />
+                @if (formTarea.get('nombre')?.hasError('required') && formTarea.get('nombre')?.touched) {
+                <small> El campo nombre es requerido </small>
+                }
+            </div>
+
+            <div class="field">
+                <label for="descripcion">Descripción</label>
+                <p-editor formControlName="descripcion" [style]="{ height: '320px' }" inputId="descripcion" />
+                <!-- <input type="text" pInputText formControlName="descripcion" id="descripcion" /> -->
+                @if (formTarea.get('descripcion')?.hasError('required') && formTarea.get('descripcion')?.touched) {
+                <small> El campo descripción es requerido </small>
+                }
+            </div>
+
+            <div class="field">
+                <label for="tipo">Tipo de tarea</label>
+                <p-dropdown formControlName="tipo" inputId="tipo" [options]="listaTiposDropdown" optionLabel="name"
+                    placeholder="Seleccione un tipo de tarea" [appendTo]="'body'" />
+                @if (formTarea.get('tipo')?.hasError('required') && formTarea.get('tipo')?.touched) {
+                <small> El campo tipo de tarea es requerido </small>
+                }
+            </div>
+
+            <div class="field">
+                <label for="tiempo_estimado">Tiempo estimado (horas)</label>
+                <p-inputNumber formControlName="tiempo_estimado" [useGrouping]="false" [showButtons]="true" inputId="tiempo_estimado" /> 
+            </div>
+
+            <div class="field">
+                <label for="peso">Peso</label>
+                <p-inputNumber formControlName="peso" [useGrouping]="false" [showButtons]="true" inputId="peso" /> 
+            </div>
+
+            <div class="field">
+                <label for="bugs_permitidos">Bugs permitidos</label>
+                <p-inputNumber formControlName="bugs_permitidos" [useGrouping]="false" [showButtons]="true" inputId="bugs_permitidos" /> 
+            </div>
+
+            <div class="field">
+                <label for="id_tarea">Tarea dependiente de...</label>
+                <p-dropdown formControlName="id_tarea" inputId="id_tarea" [options]="listaTareasDropdown" optionLabel="name"
+                    placeholder="Seleccione una tarea" [appendTo]="'body'" />
+            </div>
+
+            <div class="field">
+                <label for="id_usuario_dev">Desarrollador</label>
+                <p-dropdown formControlName="id_usuario_dev" inputId="id_usuario_dev" [options]="listaUsuariosDropdown" optionLabel="name"
+                    placeholder="Seleccione un desarrollador" [appendTo]="'body'" />
+            </div>
+
+            <div class="field">
+                <label for="id_usuario_qa">Analista de control y calidad</label>
+                <p-dropdown formControlName="id_usuario_qa" inputId="id_usuario_qa" [options]="listaUsuariosDropdown" optionLabel="name"
+                    placeholder="Seleccione un analista de control y calidad" [appendTo]="'body'" />
+            </div>
+            
+            <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" type="button" (click)="cerrarModal()"></button>
+            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" type="submit"></button>
+
+    </form>
+</p-dialog>

@@ -6,6 +6,9 @@ $gutter: 1rem;
 @import "primeng/resources/primeng.min.css";
 @import "primeflex/primeflex.scss";
 @import "primeicons/primeicons.css";
+// Para editor de primeng
+@import "quill/dist/quill.core.css";
+@import "quill/dist/quill.snow.css";
 
 /* Demos */
 @import "assets/demo/styles/flags/flags.css";
@@ -14,5 +17,5 @@ $gutter: 1rem;
 
 /* Para que los modales siempre se muestren adelante */
 .swal2-container {
-    z-index: 1500 !important;
+    z-index: 5000 !important;
 }

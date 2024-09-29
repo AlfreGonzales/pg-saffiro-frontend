@@ -10,7 +10,7 @@ import {
 import { sharedImports } from '@shared/shared-imports';
 import { Proyecto } from '@proyectos/interfaces/proyecto';
 import { ProyectosService } from '@proyectos/proyectos.service';
-import { EstadoProyecto } from '@proyectos/enums/estados-proyecto';
+import { EstadoProyecto } from '@proyectos/enums/estado-proyecto';
 import { ContextMenu, ContextMenuModule } from 'primeng/contextmenu';
 import Swal from 'sweetalert2';
 

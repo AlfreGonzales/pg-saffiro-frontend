@@ -10,7 +10,7 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="listaUsuarios" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['ci', 'nombres','apellidos','email', 'rol.nombre']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
+            <p-table #dt [value]="listaUsuarios" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['ci', 'nombres','apellidos','cargo','telefono','email', 'rol.nombre']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
                 <ng-template pTemplate="caption">
                     <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
                         <h5 class="m-0">Lista de usuarios</h5>
@@ -25,6 +25,8 @@
                         <th pSortableColumn="ci">Cédula de identidad<p-sortIcon field="ci"></p-sortIcon></th>
                         <th pSortableColumn="nombres">Nombres<p-sortIcon field="nombres"></p-sortIcon></th>
                         <th pSortableColumn="apellidos">Apellidos<p-sortIcon field="apellidos"></p-sortIcon></th>
+                        <th pSortableColumn="cargo">Cargo<p-sortIcon field="cargo"></p-sortIcon></th>
+                        <th pSortableColumn="telefono">Teléfono<p-sortIcon field="telefono"></p-sortIcon></th>
                         <th pSortableColumn="email">Email<p-sortIcon field="email"></p-sortIcon></th>
                         <th pSortableColumn="id_rol">Rol<p-sortIcon field="id_rol"></p-sortIcon></th>
                         <th pSortableColumn="created_at">Fecha de registro<p-sortIcon field="created_at"></p-sortIcon></th>
@@ -42,6 +44,12 @@
                         </td>
                         <td>
                             {{ usuario.apellidos }}
+                        </td>
+                        <td>
+                            {{ usuario.cargo }}
+                        </td>
+                        <td>
+                            {{ usuario.telefono }}
                         </td>
                         <td>
                             {{ usuario.email }}
@@ -102,6 +110,19 @@
                     }
                 </div>
             
+                <div class="field">
+                    <label for="cargo">Cargo</label>
+                    <input formControlName="cargo" type="text" pInputText id="cargo" />
+                    @if (formUsuario.get('cargo')?.hasError('required') && formUsuario.get('cargo')?.touched) {
+                    <small> El campo cargo es requerido </small>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="telefono">Teléfono</label>
+                    <input formControlName="telefono" type="text" pInputText id="telefono" />
+                </div>
+
                 <div class="field">
                     <label for="email">Email</label>
                     <input formControlName="email" type="text" pInputText id="email" />

@@ -68,7 +68,8 @@ export class RolesComponent implements OnInit {
     { name: Modulos.ROLES },
     { name: Modulos.USUARIOS},
     { name: Modulos.LOG_ACCESOS },
-    { name: Modulos.PROYECTOS }
+    { name: Modulos.PROYECTOS },
+    { name: Modulos.TAREAS },
   ];
   
   productDialog: boolean = false;

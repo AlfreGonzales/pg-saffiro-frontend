@@ -3,6 +3,8 @@ export interface Usuario {
     ci: string;
     nombres: string;
     apellidos: string;
+    cargo: string;
+    telefono: string;
     email: string;
     password: string;
     estado_logico: boolean;

@@ -97,6 +97,8 @@ export class UsuariosComponent implements OnInit {
     ci: ['', [Validators.required, Validators.minLength(7)]],
     nombres: ['', [Validators.required, Validators.minLength(3)]],
     apellidos: ['', [Validators.required, Validators.minLength(3)]],
+    cargo: ['', [Validators.required]],
+    telefono: [''],
     email: ['', [Validators.required, Validators.email]],
     password: ['', [Validators.required, Validators.minLength(8)]],
     id_rol: ['', [Validators.required]]
@@ -126,6 +128,8 @@ export class UsuariosComponent implements OnInit {
       { field: 'ci', header: 'Cédula de identidad' },
       { field: 'nombres', header: 'Nombres' },
       { field: 'apellidos', header: 'Apellidos' },
+      { field: 'cargo', header: 'Cargo' },
+      { field: 'Telefono', header: 'Teléfono' },
       { field: 'email', header: 'Email' },
       { field: 'id_rol', header: 'Rol' },
       { field: 'created_at', header: 'Fecha de registro' },
@@ -167,6 +171,8 @@ export class UsuariosComponent implements OnInit {
         ci: this.formUsuario.value.ci,
         nombres: this.formUsuario.value.nombres,
         apellidos: this.formUsuario.value.apellidos,
+        cargo: this.formUsuario.value.cargo,
+        telefono: this.formUsuario.value.telefono,
         email: this.formUsuario.value.email,
         password: this.formUsuario.value.password,
         id_rol: id_rol.code
@@ -188,6 +194,8 @@ export class UsuariosComponent implements OnInit {
         ci: this.formUsuario.value.ci,
         nombres: this.formUsuario.value.nombres,
         apellidos: this.formUsuario.value.apellidos,
+        cargo: this.formUsuario.value.cargo,
+        telefono: this.formUsuario.value.telefono,
         email: this.formUsuario.value.email,
         id_rol: id_rol.code
       };
@@ -236,6 +244,8 @@ export class UsuariosComponent implements OnInit {
       ci: usuario.ci,
       nombres: usuario.nombres,
       apellidos: usuario.apellidos,
+      cargo: usuario.cargo,
+      telefono: usuario.telefono,
       email: usuario.email,
       password: 'admin123abc',
       id_rol: this.listaRolesDropdown.find((rol) => rol.code === usuario.id_rol)

@@ -26,7 +26,7 @@ export class AppComponent {
         menuMode: 'static',                 //menu lateral "static" o "overlay"
         colorScheme: 'light',               //tema "light" o "dark" va asociado con el siguiente parametro
         theme: 'lara-light-indigo',         //tema por defecto, aun no se cambiar de tema (en styles.scss)
-        scale: 16                           //tamaño de letra global, va desde el "12" al "16"
+        scale: 15                           //tamaño de letra global, va desde el "12" al "16"
     };
     this.layoutService.config.set(config);
 }

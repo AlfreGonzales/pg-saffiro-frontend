@@ -6,7 +6,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { Table } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
-import { EstadoProyecto } from '@proyectos/enums/estados-proyecto';
+import { EstadoProyecto } from '@proyectos/enums/estado-proyecto';
 
 @Component({
   selector: 'app-listado-proyectos',

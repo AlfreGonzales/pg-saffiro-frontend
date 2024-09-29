@@ -1,0 +1,82 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <p-button icon="pi pi-arrow-left" size="large" [text]="true" [raised]="true" severity="secondary" routerLink="../tablero" />
+                </ng-template>
+            </p-toolbar>
+            <p-table #dt [value]="listaTareas" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['tarea.id', 'tarea.nombre']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" selectionMode="multiple" [rowHover]="true" dataKey="id">
+                <ng-template pTemplate="caption">
+                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+                        <h5 class="m-0">Lista de tareas</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."  class="w-full sm:w-auto"/>
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th pSortableColumn="tarea.id">Código<p-sortIcon field="tarea.id"></p-sortIcon></th>
+                        <th pSortableColumn="tarea.nombre">Nombre<p-sortIcon field="tarea.nombre"></p-sortIcon></th>
+                        <th pSortableColumn="tarea.descripcion">Descripción<p-sortIcon field="tarea.descripcion"></p-sortIcon></th>
+                        <th pSortableColumn="tarea.tipo">Tipo de tarea<p-sortIcon field="tarea.tipo"></p-sortIcon></th>
+                        <th pSortableColumn="tarea.tiempo_estimado">Tiempo estimado<p-sortIcon field="tarea.tiempo_estimado"></p-sortIcon></th>
+                        <th pSortableColumn="tarea.peso">Peso<p-sortIcon field="tarea.peso"></p-sortIcon></th>
+                        <th pSortableColumn="tarea.bugs_permitidos">Bugs permitidos<p-sortIcon field="tarea.bugs_permitidos"></p-sortIcon></th>
+                        <th pSortableColumn="tarea.prioridad">Prioridad<p-sortIcon field="tarea.prioridad"></p-sortIcon></th>
+                        <th pSortableColumn="tarea.tarea.nombre">Depende de<p-sortIcon field="tarea.tarea.nombre"></p-sortIcon></th>
+                        <th pSortableColumn="usuario_dev.nombres">Desarrollador<p-sortIcon field="usuario_dev.nombres"></p-sortIcon></th>
+                        <th pSortableColumn="usuario_qa.nombres">Analista de control y calidad<p-sortIcon field="usuario_qa.nombres"></p-sortIcon></th>
+                        <th pSortableColumn="estado">Estado<p-sortIcon field="estado"></p-sortIcon></th>
+                        <th pSortableColumn="tarea.created_at">Fecha de registro<p-sortIcon field="tarea.created_at"></p-sortIcon></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-tarea>
+                    <tr>
+                        <td>
+                            {{ tarea.tarea.id | number: '3.0' }}
+                        </td>
+                        <td>
+                            {{ tarea.tarea.nombre }}
+                        </td>
+                        <td>
+                            {{ tarea.tarea.descripcion }}
+                        </td>
+                        <td>
+                            <p-chip [label]="tipo.get(tarea.tarea.tipo)" />
+                        </td>
+                        <td>
+                            {{ tarea.tarea.tiempo_estimado ? tarea.tarea.tiempo_estimado + ' horas' : null }}
+                        </td>
+                        <td>
+                            {{ tarea.tarea.peso }}
+                        </td>
+                        <td>
+                            {{ tarea.tarea.bugs_permitidos }}
+                        </td>
+                        <td>
+                            {{ tarea.tarea.prioridad }}
+                        </td>
+                        <td>
+                            {{ tarea.tarea.tarea?.nombre || null }}
+                        </td>
+                        <td>
+                            {{ tarea.usuario_dev?.nombres || null }}
+                        </td>
+                        <td>
+                            {{ tarea.usuario_qa?.nombres || null }}
+                        </td>
+                        <td>
+                            <p-tag [rounded]="true" [value]="tarea.estado.toUpperCase()" [style]="{background: coloresEstado.get(tarea.estado)[1]}" />
+                        </td>
+                        <td>
+                            {{ tarea.tarea.created_at | date:'dd/MM/yyyy' }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+</div>
