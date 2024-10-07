@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, ViewChild } from '@angular/core';
 import { sharedImports } from '@shared/shared-imports';
 import { ContextMenu, ContextMenuModule } from 'primeng/contextmenu';
 import { ColoresEstadoTarea, EstadoTarea } from '../constantes/estado-tarea';
@@ -46,6 +46,8 @@ export class TableroTareasComponent implements OnInit {
   idSprintTarea!: number;
 
   idTarea!: number;
+
+  tareaActual!: Tarea;
 
   formTarea = this.fb.group({
     nombre: ['', [Validators.required]],
@@ -223,21 +225,25 @@ export class TableroTareasComponent implements OnInit {
   }
 
   abrirModalEditar(tarea: Tarea) {
+    this.tareaActual = tarea;
     this.idSprintTarea = tarea.id;
     this.idTarea = tarea.id_tarea;
     this.editting = true;
-    this.formTarea.patchValue({
-      nombre: tarea.tarea.nombre,
-      descripcion: tarea.tarea.descripcion,
-      tipo: this.listaTiposDropdown.find((tipo) => tipo.code === tarea.tarea.tipo),
-      tiempo_estimado: tarea.tarea.tiempo_estimado as any,
-      peso: tarea.tarea.peso as any,
-      bugs_permitidos: tarea.tarea.bugs_permitidos as any,
-      id_tarea: this.listaTareasDropdown.find(item => item.code === tarea.tarea.id_tarea),
-      id_usuario_dev: this.listaUsuariosDropdown.find((usuario) => usuario.code === tarea.id_usuario_dev),
-      id_usuario_qa: this.listaUsuariosDropdown.find((usuario) => usuario.code === tarea.id_usuario_qa)
-    });
     this.tareaDialog = true;
+  }
+
+  inicializaModal() {
+    this.formTarea.patchValue({
+      nombre: this.tareaActual.tarea.nombre,
+      descripcion: this.tareaActual.tarea.descripcion,
+      tipo: this.listaTiposDropdown.find((tipo) => tipo.code === this.tareaActual.tarea.tipo),
+      tiempo_estimado: this.tareaActual.tarea.tiempo_estimado as any,
+      peso: this.tareaActual.tarea.peso as any,
+      bugs_permitidos: this.tareaActual.tarea.bugs_permitidos as any,
+      id_tarea: this.listaTareasDropdown.find(item => item.code === this.tareaActual.tarea.id_tarea),
+      id_usuario_dev: this.listaUsuariosDropdown.find((usuario) => usuario.code === this.tareaActual.id_usuario_dev),
+      id_usuario_qa: this.listaUsuariosDropdown.find((usuario) => usuario.code === this.tareaActual.id_usuario_qa)
+    });
   }
 
   crearTarea() {

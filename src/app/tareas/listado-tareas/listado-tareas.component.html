@@ -20,7 +20,6 @@
                     <tr>
                         <th pSortableColumn="tarea.id">Código<p-sortIcon field="tarea.id"></p-sortIcon></th>
                         <th pSortableColumn="tarea.nombre">Nombre<p-sortIcon field="tarea.nombre"></p-sortIcon></th>
-                        <th pSortableColumn="tarea.descripcion">Descripción<p-sortIcon field="tarea.descripcion"></p-sortIcon></th>
                         <th pSortableColumn="tarea.tipo">Tipo de tarea<p-sortIcon field="tarea.tipo"></p-sortIcon></th>
                         <th pSortableColumn="tarea.tiempo_estimado">Tiempo estimado<p-sortIcon field="tarea.tiempo_estimado"></p-sortIcon></th>
                         <th pSortableColumn="tarea.peso">Peso<p-sortIcon field="tarea.peso"></p-sortIcon></th>
@@ -40,9 +39,6 @@
                         </td>
                         <td>
                             {{ tarea.tarea.nombre }}
-                        </td>
-                        <td>
-                            {{ tarea.tarea.descripcion }}
                         </td>
                         <td>
                             <p-chip [label]="tipo.get(tarea.tarea.tipo)" />

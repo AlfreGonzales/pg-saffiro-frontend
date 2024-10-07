@@ -42,7 +42,6 @@ export class ListadoTareasComponent implements OnInit {
     this.cols = [
       { field: 'tarea.id', header: 'Código' },
       { field: 'tarea.nombre', header: 'Nombre' },
-      { field: 'tarea.descripcion', header: 'Descripción' },
       { field: 'tarea.tipo', header: 'Tipo de tarea' },
       { field: 'tarea.tiempo_estimado', header: 'Tiempo estimado' },
       { field: 'tarea.peso', header: 'Peso' },
