@@ -17,4 +17,16 @@ export class LocalStorageService {
   removeUsuario() {
     localStorage.removeItem('usuario');
   }
+
+  setIdProyecto(idProyecto: any) {
+    localStorage.setItem('idProyecto', JSON.stringify(idProyecto));
+  }
+
+  getIdProyecto() {
+    return JSON.parse(localStorage.getItem('idProyecto')!);
+  }
+
+  removeIdProyecto() {
+    localStorage.removeItem('idProyecto');
+  }
 }

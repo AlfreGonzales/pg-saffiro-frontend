@@ -13,6 +13,8 @@ import { ProyectosService } from '@proyectos/proyectos.service';
 import { EstadoProyecto } from '@proyectos/enums/estado-proyecto';
 import { ContextMenu, ContextMenuModule } from 'primeng/contextmenu';
 import Swal from 'sweetalert2';
+import { LocalStorageService } from '@shared/services/local-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tablero-proyectos',
@@ -70,7 +72,9 @@ export class TableroProyectosComponent implements OnInit {
   ];
 
   constructor(
-    private proyectosService: ProyectosService
+    private proyectosService: ProyectosService,
+    private localStorageService: LocalStorageService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -120,5 +124,10 @@ export class TableroProyectosComponent implements OnInit {
   onContextMenu(event: any, proyecto: Proyecto) {
     this.proyectoSelecccionado = proyecto;
     this.cm.show(event);
+  }
+
+  irTableroTareas(idProyecto: number) {
+    this.localStorageService.setIdProyecto(idProyecto);
+    this.router.navigate(['tareas/tablero']);
   }
 }

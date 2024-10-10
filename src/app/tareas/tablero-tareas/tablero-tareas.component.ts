@@ -10,6 +10,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { UsuariosService } from '@usuarios/usuarios.service';
 import { TipoTarea } from '../constantes/tipo-tarea';
 import { EditorModule } from 'primeng/editor';
+import { LocalStorageService } from '@shared/services/local-storage.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tablero-tareas',
@@ -26,6 +28,8 @@ export class TableroTareasComponent implements OnInit {
   tipo = TipoTarea;
 
   tareasNuevas!: Tarea[];
+
+  tareasAprobadas!: Tarea[];
 
   tareasEnCurso!: Tarea[];
 
@@ -67,11 +71,16 @@ export class TableroTareasComponent implements OnInit {
 
   listaUsuariosDropdown!: any[];
 
+  idProyecto!: number;
+
   constructor(
     private tareasService: TareasService,
     private usuariosService: UsuariosService,
     private fb: FormBuilder,
-  ) { }
+    private localStorageService: LocalStorageService,
+  ) {
+    this.idProyecto = this.localStorageService.getIdProyecto();
+  }
 
   ngOnInit(): void {
     this.obtenerLista();
@@ -79,7 +88,7 @@ export class TableroTareasComponent implements OnInit {
   }
 
   obtenerLista() {
-    this.tareasService.findAll().subscribe({
+    this.tareasService.findAll(this.idProyecto).subscribe({
       next: (data) => {
         this.obtenerListaEstados(data);
         this.obtenerListaTareas(data);
@@ -91,6 +100,9 @@ export class TableroTareasComponent implements OnInit {
   obtenerListaEstados(listaTareas: Tarea[]) {
     this.tareasNuevas = listaTareas.filter(
       (tarea) => tarea.estado === this.estado.NUEVA
+    );
+    this.tareasAprobadas = listaTareas.filter(
+      (tarea) => tarea.estado === this.estado.APROBADA
     );
     this.tareasEnCurso = listaTareas.filter(
       (tarea) => tarea.estado === this.estado.EN_CURSO
@@ -233,17 +245,21 @@ export class TableroTareasComponent implements OnInit {
   }
 
   inicializaModal() {
-    this.formTarea.patchValue({
-      nombre: this.tareaActual.tarea.nombre,
-      descripcion: this.tareaActual.tarea.descripcion,
-      tipo: this.listaTiposDropdown.find((tipo) => tipo.code === this.tareaActual.tarea.tipo),
-      tiempo_estimado: this.tareaActual.tarea.tiempo_estimado as any,
-      peso: this.tareaActual.tarea.peso as any,
-      bugs_permitidos: this.tareaActual.tarea.bugs_permitidos as any,
-      id_tarea: this.listaTareasDropdown.find(item => item.code === this.tareaActual.tarea.id_tarea),
-      id_usuario_dev: this.listaUsuariosDropdown.find((usuario) => usuario.code === this.tareaActual.id_usuario_dev),
-      id_usuario_qa: this.listaUsuariosDropdown.find((usuario) => usuario.code === this.tareaActual.id_usuario_qa)
-    });
+    if (this.editting) {
+      this.formTarea.patchValue({
+        nombre: this.tareaActual.tarea.nombre,
+        descripcion: this.tareaActual.tarea.descripcion,
+        tipo: this.listaTiposDropdown.find((tipo) => tipo.code === this.tareaActual.tarea.tipo),
+        tiempo_estimado: this.tareaActual.tarea.tiempo_estimado as any,
+        peso: this.tareaActual.tarea.peso as any,
+        bugs_permitidos: this.tareaActual.tarea.bugs_permitidos as any,
+        id_tarea: this.listaTareasDropdown.find(item => item.code === this.tareaActual.tarea.id_tarea),
+        id_usuario_dev: this.listaUsuariosDropdown.find((usuario) => usuario.code === this.tareaActual.id_usuario_dev),
+        id_usuario_qa: this.listaUsuariosDropdown.find((usuario) => usuario.code === this.tareaActual.id_usuario_qa)
+      });
+    }
+    else
+      this.formTarea.reset();
   }
 
   crearTarea() {
@@ -264,7 +280,8 @@ export class TableroTareasComponent implements OnInit {
           tiempo_estimado: this.formTarea.value.tiempo_estimado,
           peso: this.formTarea.value.peso,
           bugs_permitidos: this.formTarea.value.bugs_permitidos,
-          id_tarea: tareaDep?.code || null
+          id_tarea: tareaDep?.code || null,
+          id_proyecto: this.idProyecto
         },
         createSprintTareaDto: {
           id_usuario_dev: usuarioDev?.code || null,

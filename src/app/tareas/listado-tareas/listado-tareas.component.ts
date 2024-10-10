@@ -5,6 +5,7 @@ import { ColoresEstadoTarea, EstadoTarea } from '../constantes/estado-tarea';
 import { Table } from 'primeng/table';
 import { TipoTarea } from '../constantes/tipo-tarea';
 import { ChipModule } from 'primeng/chip';
+import { LocalStorageService } from '@shared/services/local-storage.service';
 
 @Component({
   selector: 'app-listado-tareas',
@@ -26,14 +27,21 @@ export class ListadoTareasComponent implements OnInit {
 
   rowsPerPageOptions = [5, 10, 20];
 
-  constructor(private tareasService: TareasService) { }
+  idProyecto!: number;
+
+  constructor(
+    private tareasService: TareasService,
+    private localStorageService: LocalStorageService,
+  ) {
+    this.idProyecto = this.localStorageService.getIdProyecto();
+  }
 
   ngOnInit(): void {
     this.obtenerLista();
   }
 
   obtenerLista() {
-    this.tareasService.findAll().subscribe({
+    this.tareasService.findAll(this.idProyecto).subscribe({
       next: (data) => {
         this.listaTareas = data;
       },
