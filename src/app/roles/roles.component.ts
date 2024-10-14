@@ -63,14 +63,7 @@ interface Modulo {
 export class RolesComponent implements OnInit {
   listaRoles: Rol[] = [];
 
-  listamodulosMultiselect: any[] = [
-    { name: Modulos.DASHBOARDS },
-    { name: Modulos.ROLES },
-    { name: Modulos.USUARIOS},
-    { name: Modulos.LOG_ACCESOS },
-    { name: Modulos.PROYECTOS },
-    { name: Modulos.TAREAS },
-  ];
+  listamodulosMultiselect: any[] = Object.values(Modulos).map(iModulo => ({ name: iModulo }));
   
   productDialog: boolean = false;
 

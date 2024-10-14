@@ -12,6 +12,7 @@ import { ListadoProyectosComponent } from './proyectos/listado-proyectos/listado
 import { TableroProyectosComponent } from './proyectos/tablero-proyectos/tablero-proyectos.component';
 import { TableroTareasComponent } from './tareas/tablero-tareas/tablero-tareas.component';
 import { ListadoTareasComponent } from './tareas/listado-tareas/listado-tareas.component';
+import { EquiposComponent } from './equipos/equipos.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,12 @@ export const routes: Routes = [
         canActivate: [loginGuard]
       },
       {
+        path: 'log-accesos',
+        component: LogAccesosComponent,
+        title: 'Log de accesos',
+        canActivate: [loginGuard]
+      },
+      {
         path: 'usuarios',
         component: UsuariosComponent,
         title: 'Usuarios',
@@ -43,9 +50,9 @@ export const routes: Routes = [
         canActivate: [loginGuard]
       },
       {
-        path: 'log-accesos',
-        component: LogAccesosComponent,
-        title: 'Log de accesos',
+        path: 'equipos',
+        component: EquiposComponent,
+        title: 'Equipos',
         canActivate: [loginGuard]
       },
       {

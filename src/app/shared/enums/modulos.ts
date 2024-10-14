@@ -1,8 +1,9 @@
 export enum Modulos {
     DASHBOARDS = 'dashboards',
+    LOG_ACCESOS = 'logAccesos',
     ROLES = 'roles',
     USUARIOS = 'usuarios',
-    LOG_ACCESOS = 'logAccesos',
+    EQUIPOS = 'equipos',
     PROYECTOS = 'proyectos',
     TAREAS = 'tareas',
     EMPRESAS = 'empresas'

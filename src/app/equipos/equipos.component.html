@@ -1,0 +1,50 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-toolbar styleClass="mb-4">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Nuevo equipo" icon="pi pi-plus" class="p-button-success"
+                            (click)="abrirModalCrear()"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+            @if (loading) {
+                <app-pg-tabla [title]="tableConfig.title" [data]="tableConfig.data" [cols]="tableConfig.cols" [subTable]="tableConfig.subTable"></app-pg-tabla>
+            }
+        </div>
+    </div>
+</div>
+
+<p-dialog [(visible)]="productDialog" [style]="{width: '500px'}" header="Nuevo equipo" [modal]="true" class="p-fluid">
+    <form [formGroup]="formEquipo" (ngSubmit)="crearEquipo()">
+
+            <div class="field">
+                <label for="nombre">Nombre</label>
+                <input type="text" pInputText formControlName="nombre" id="nombre" />
+                @if (formEquipo.get('nombre')?.hasError('required') && formEquipo.get('nombre')?.touched) {
+                <small> El campo nombre es requerido </small>
+                }
+            </div>
+
+            <div class="field">
+                <label for="descripcion">Descripción</label>
+                <input type="text" pInputText formControlName="descripcion" id="descripcion" />
+                @if (formEquipo.get('descripcion')?.hasError('required') && formEquipo.get('descripcion')?.touched) {
+                <small> El campo descripción es requerido </small>
+                }
+            </div>
+
+            <div class="field">
+                <label for="usuarios">Usuarios</label>
+                <p-multiSelect [options]="listaUsuariosMultiselect" formControlName="usuarios" optionLabel="name" placeholder="Seleccione usuarios" inputId="usuarios" [appendTo]="'body'" />
+                @if (formEquipo.get('usuarios')?.hasError('required') && formEquipo.get('usuarios')?.touched) {
+                <small> El campo usuarios es requerido </small>
+                }
+            </div>
+            
+            <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" type="button" (click)="cerrarModal()"></button>
+            <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" type="submit"></button>
+
+    </form>
+</p-dialog>

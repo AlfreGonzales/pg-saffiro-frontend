@@ -1,0 +1,111 @@
+<p-table #dt [value]="data" [columns]="cols" responsiveLayout="scroll" [rows]="10"
+    [globalFilterFields]="globalFilterFields" [paginator]="true" [rowsPerPageOptions]="[10,20,30]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" [rowHover]="true" dataKey="id">
+    <ng-template pTemplate="caption">
+        <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
+            <h5 class="m-0">{{ title }}</h5>
+            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." class="w-full sm:w-auto" />
+            </span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            @if (existsSubtable()) {
+                <th></th>
+            }
+            @for (col of columns; track col) {
+                @if (col.sort === false) {
+                    <th>
+                        {{ col.header }}
+                    </th>
+                } @else {
+                    <th [pSortableColumn]="col.field">
+                        {{ col.header }}
+                        <p-sortIcon [field]="col.field"></p-sortIcon>
+                    </th>
+                }
+            }
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
+        <tr>
+            @if (existsSubtable()) {
+                <td>
+                    <p-button type="button" pRipple [pRowToggler]="rowData" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                </td>
+            }
+            @for (col of columns; track col) {
+                <td>
+                @switch (col.type) {
+                    @case ('state') {
+                        <p-tag [rounded]="true" [value]="rowData[col.field] ? 'ACTIVO' : 'INACTIVO'" [severity]="rowData[col.field] ? 'success' : 'danger'" />
+                    }
+                    @case ('date') {
+                        {{ rowData[col.field] | date:'dd/MM/yyyy' }}
+                    }
+                    @case ('fullDate') {
+                        {{ rowData[col.field] | date:'dd/MM/yyyy, HH:mm:ss' }}
+                    }
+                    @case ('chip') {
+                        {{ rowData[col.field] }}
+                    }
+                    @case ('money') {
+                        {{ rowData[col.field] }}
+                    }
+                    @case ('short') {
+                        {{ rowData[col.field] | slice:0:50 }}...
+                    }
+                    @case ('actions') {
+                        <div class="flex">
+                        @for (action of col.actions; track action) {
+                            @if (action.type === 'edit') {
+                                <button pButton pRipple icon="pi pi-pencil" class="mr-2" size="large" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="action.click(rowData)"></button>
+                            }
+                            @if (action.type === 'inactivate') {
+                                <button pButton pRipple icon="pi pi-trash" size="large" [rounded]="true" [text]="true" [raised]="true" severity="danger" [swal]="alertaBorrar" (confirm)="action.click(rowData)"></button>
+                            }
+                        }
+                        </div>
+                    }
+                    @default {
+                        {{ rowData[col.field] }}
+                    }
+                }
+                </td>
+            }
+        </tr>
+    </ng-template>
+    @if (existsSubtable()) {
+    <ng-template pTemplate="rowexpansion" let-rowData>
+        <tr>
+            <td colspan="7">
+                <div class="p-3">
+                    <p-table [value]="rowData[subTable.data]" [columns]="subTable.cols">
+                        <ng-template pTemplate="header" let-columns>
+                            <tr>
+                                @for (col of columns; track col) {
+                                    <th>
+                                        {{ col.header }}
+                                    </th>
+                                }
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-rowData let-columns="columns">
+                            <tr>
+                                @for (col of columns; track col) {
+                                    <td>
+                                        {{ getNestedValue(rowData, col.field) }}
+                                    </td>
+                                }
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+    }
+</p-table>
