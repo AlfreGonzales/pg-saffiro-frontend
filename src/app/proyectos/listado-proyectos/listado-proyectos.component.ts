@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { Table } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
 import { EstadoProyecto } from '@proyectos/enums/estado-proyecto';
+import { EquiposService } from '../../equipos/equipos.service';
 
 @Component({
   selector: 'app-listado-proyectos',
@@ -30,20 +31,25 @@ export class ListadoProyectosComponent implements OnInit {
 
   rowsPerPageOptions = [5, 10, 20];
 
+  listaEquiposDropdown!: any[];
+
   formProyecto = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3)]],
     descripcion: ['', [Validators.required]],
     costo_estimado: ['', [Validators.required]],
-    fecha_inicio_fin: ['', [Validators.required]]
+    fecha_inicio_fin: ['', [Validators.required]],
+    id_equipo: ['', [Validators.required]]
   });
 
   constructor(
     private fb: FormBuilder,
-    private proyectosService: ProyectosService
+    private proyectosService: ProyectosService,
+    private equiposService: EquiposService
   ) {}
 
   ngOnInit(): void {
     this.obtenerLista();
+    this.obtenerListaEquipos();
   }
 
   obtenerLista() {
@@ -65,6 +71,22 @@ export class ListadoProyectosComponent implements OnInit {
     ];
   }
 
+  obtenerListaEquipos() {
+    this.equiposService.findAll().subscribe({
+      next: (data) => {
+        this.listaEquiposDropdown = data
+        .filter((iEquipo) => iEquipo.estado_logico)
+        .map((iEquipo) => {
+          return {
+            code: iEquipo.id,
+            name: iEquipo.nombre
+          };
+        });
+      },
+      error: (error) => console.error('Error al listar los equipos', error)
+    });
+  }
+
   abrirModalCrear() {
     this.formProyecto.reset();
     this.editting = false;
@@ -79,7 +101,8 @@ export class ListadoProyectosComponent implements OnInit {
       nombre: proyecto.nombre,
       descripcion: proyecto.descripcion,
       costo_estimado: proyecto.costo_estimado.toString(),
-      fecha_inicio_fin: fechaInicioFin
+      fecha_inicio_fin: fechaInicioFin,
+      id_equipo: this.listaEquiposDropdown.find((iEquipo) => iEquipo.code === proyecto.id_equipo)
     });
     this.productDialog = true;
   }
@@ -97,13 +120,15 @@ export class ListadoProyectosComponent implements OnInit {
       return;
     }
     const [fechaInicio, fechaFin] = this.formProyecto.value.fecha_inicio_fin ?? [];
+    const id_equipo: any = this.formProyecto.value.id_equipo;
     if (!this.editting) {
       const proyecto: any = {
         nombre: this.formProyecto.value.nombre,
         descripcion: this.formProyecto.value.descripcion,
         costo_estimado: Number(this.formProyecto.value.costo_estimado),
         fecha_inicio: fechaInicio,
-        fecha_fin: fechaFin
+        fecha_fin: fechaFin,
+        id_equipo: id_equipo.code
       };
       this.proyectosService.create(proyecto).subscribe({
         next: () => {
@@ -123,7 +148,8 @@ export class ListadoProyectosComponent implements OnInit {
         descripcion: this.formProyecto.value.descripcion,
         costo_estimado: Number(this.formProyecto.value.costo_estimado),
         fecha_inicio: fechaInicio,
-        fecha_fin: fechaFin
+        fecha_fin: fechaFin,
+        id_equipo: id_equipo.code
       };
       this.proyectosService.update(this.idProyecto, proyecto).subscribe({
         next: () => {

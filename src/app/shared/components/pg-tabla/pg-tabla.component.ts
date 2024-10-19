@@ -41,7 +41,7 @@ export class PgTablaComponent {
     return path.split('.').reduce((acc, part) => acc && acc[part], obj);
   }
 
-  existsSubtable() {
-    return Object.keys(this.subTable).length > 0;
+  emptySubTable() {
+    return Object.keys(this.subTable).length === 0;
   }
 }

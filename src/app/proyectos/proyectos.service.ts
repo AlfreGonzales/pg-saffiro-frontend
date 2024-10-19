@@ -20,6 +20,10 @@ export class ProyectosService {
     return this.http.get<Proyecto[]>(this.baseUrl);
   }
 
+  findOne(id: number) {
+    return this.http.get<Proyecto>(`${this.baseUrl}${id}`);
+  }
+
   update(id: number, proyecto: Proyecto) {
     return this.http.patch(`${this.baseUrl}${id}`, proyecto);
   }

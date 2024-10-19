@@ -12,6 +12,7 @@ import { TipoTarea } from '../constantes/tipo-tarea';
 import { EditorModule } from 'primeng/editor';
 import { LocalStorageService } from '@shared/services/local-storage.service';
 import { Router } from '@angular/router';
+import { ProyectosService } from '@proyectos/proyectos.service';
 
 @Component({
   selector: 'app-tablero-tareas',
@@ -73,17 +74,21 @@ export class TableroTareasComponent implements OnInit {
 
   idProyecto!: number;
 
+  proyecto: any = {};
+
   constructor(
     private tareasService: TareasService,
     private usuariosService: UsuariosService,
     private fb: FormBuilder,
     private localStorageService: LocalStorageService,
+    private proyectosService: ProyectosService
   ) {
     this.idProyecto = this.localStorageService.getIdProyecto();
   }
 
   ngOnInit(): void {
     this.obtenerLista();
+    this.obtenerProyecto();
     this.obtenerListaUsuarios();
   }
 
@@ -126,6 +131,15 @@ export class TableroTareasComponent implements OnInit {
         code: tarea.tarea.id,
         name: tarea.tarea.nombre
       };
+    });
+  }
+
+  obtenerProyecto() {
+    this.proyectosService.findOne(this.idProyecto).subscribe({
+      next: (data) => {
+        this.proyecto = data;
+      },
+      error: (error) => console.error('Error al listar proyecto', error)
     });
   }
 

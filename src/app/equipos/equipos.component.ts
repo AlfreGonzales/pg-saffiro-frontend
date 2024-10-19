@@ -67,10 +67,13 @@ export class EquiposComponent implements OnInit {
       { field: 'estado_logico', header: 'Estado', type: 'state' },
       { header: '', sort: false, type: 'actions', actions: [
         {
-          type: 'edit', click: (item: any) => this.abrirModalEditar(item)
+          type: 'edit', click: (item: any) => this.abrirModalEditar(item), visible: 'estado_logico'
         },
         {
-          type: 'inactivate', click: (item: Equipo) => this.inactivar(item)
+          type: 'inactivate', click: (item: Equipo) => this.inactivar(item), visible: 'estado_logico'
+        },
+        {
+          type: 'activate', click: (item: Equipo) => this.inactivar(item), visible: 'estado_logico'
         }
       ] }
     ];

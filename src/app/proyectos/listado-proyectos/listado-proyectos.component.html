@@ -114,7 +114,16 @@
                         <small> El campo fecha de inicio y fin es requerido </small>
                         }
                     </div>
-                    
+
+                    <div class="field">
+                        <label for="id_equipo">Equipo de desarrollo</label>
+                        <p-dropdown formControlName="id_equipo" inputId="id_equipo" [options]="listaEquiposDropdown" optionLabel="name"
+                            placeholder="Seleccione un equipo" [appendTo]="'body'" />
+                        @if (formProyecto.get('id_equipo')?.hasError('required') && formProyecto.get('id_equipo')?.touched) {
+                        <small> El campo equipo de desarrollo es requerido </small>
+                        }
+                    </div>
+
                     <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" type="button" (click)="cerrarModal()"></button>
                     <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" type="submit"></button>
 

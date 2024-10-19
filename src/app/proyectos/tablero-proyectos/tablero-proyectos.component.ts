@@ -26,11 +26,11 @@ import { Router } from '@angular/router';
 export class TableroProyectosComponent implements OnInit {
   estado = EstadoProyecto;
 
-  proyectosPlanificados!: Proyecto[];
+  proyectosPlanificados!: any[];
 
-  proyectosEnCurso!: Proyecto[];
+  proyectosEnCurso!: any[];
 
-  proyectosAcabados!: Proyecto[];
+  proyectosAcabados!: any[];
 
   @ViewChild('cm') cm!: ContextMenu;
 

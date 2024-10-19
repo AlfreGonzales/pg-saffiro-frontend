@@ -13,7 +13,7 @@
     </ng-template>
     <ng-template pTemplate="header" let-columns>
         <tr>
-            @if (existsSubtable()) {
+            @if (!emptySubTable()) {
                 <th></th>
             }
             @for (col of columns; track col) {
@@ -32,7 +32,7 @@
     </ng-template>
     <ng-template pTemplate="body" let-rowData let-columns="columns" let-expanded="expanded">
         <tr>
-            @if (existsSubtable()) {
+            @if (!emptySubTable()) {
                 <td>
                     <p-button type="button" pRipple [pRowToggler]="rowData" [text]="true" [rounded]="true" [plain]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                 </td>
@@ -61,11 +61,14 @@
                     @case ('actions') {
                         <div class="flex">
                         @for (action of col.actions; track action) {
-                            @if (action.type === 'edit') {
+                            @if (action.type === 'edit' && rowData[action.visible]) {
                                 <button pButton pRipple icon="pi pi-pencil" class="mr-2" size="large" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="action.click(rowData)"></button>
                             }
-                            @if (action.type === 'inactivate') {
+                            @if (action.type === 'inactivate' && rowData[action.visible]) {
                                 <button pButton pRipple icon="pi pi-trash" size="large" [rounded]="true" [text]="true" [raised]="true" severity="danger" [swal]="alertaBorrar" (confirm)="action.click(rowData)"></button>
+                            }
+                            @if (action.type === 'activate' && !rowData[action.visible]) {
+                                <button pButton pRipple icon="pi pi-undo" size="large" [rounded]="true" [text]="true" [raised]="true" severity="success" [swal]="alertaBorrar" (confirm)="action.click(rowData)"></button>
                             }
                         }
                         </div>
@@ -78,7 +81,7 @@
             }
         </tr>
     </ng-template>
-    @if (existsSubtable()) {
+    @if (!emptySubTable()) {
     <ng-template pTemplate="rowexpansion" let-rowData>
         <tr>
             <td colspan="7">
