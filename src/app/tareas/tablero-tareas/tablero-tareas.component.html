@@ -4,11 +4,24 @@
             <h2 class="font-bold">Tablero de tareas ({{ proyecto.nombre }})</h2>
             <p-toolbar styleClass="mb-4">
                 <ng-template pTemplate="left">
-                    <button pButton pRipple label="Listado de tareas" icon="pi pi-list" size="large" [text]="true" [raised]="true" severity="success" class="mr-3" routerLink="../listado"></button>
+                    @if (listaSprintsDropdown.length !== 0) {
+                        <button pButton pRipple label="Listado de tareas" icon="pi pi-list" size="large" [text]="true" [raised]="true" severity="success" class="mr-3" routerLink="../listado"></button>
+                        <div class="my-2">
+                            <button pButton pRipple label="Nueva tarea" icon="pi pi-plus" class="p-button-success"
+                                (click)="abrirModalCrear()"></button>
+                        </div>
+                    } @else {
+                        <p-messages [value]="message" [enableService]="false" [closable]="false" />
+                    }
+                </ng-template>
+                <ng-template pTemplate="right">
                     <div class="my-2">
-                        <button pButton pRipple label="Nueva tarea" icon="pi pi-plus" class="p-button-success"
-                            (click)="abrirModalCrear()"></button>
+                        <button pButton pRipple label="Nuevo sprint" icon="pi pi-plus" class="p-button-success mr-3"
+                            (click)="abrirModalCrearSprint()"></button>
                     </div>
+                    @if (listaSprintsDropdown.length !== 0) {
+                        <p-dropdown [options]="listaSprintsDropdown" [formControl]="idSprint" optionLabel="name" optionValue="code" [appendTo]="'body'" (onChange)="onDropdownChange()" />
+                    }
                 </ng-template>
             </p-toolbar>
             <div class="flex overflow-x-auto" cdkDropListGroup>
@@ -225,5 +238,46 @@
             <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" type="submit"></button>
 
         </div>
+    </form>
+</p-dialog>
+
+<p-dialog [(visible)]="sprintDialog" [style]="{width: '500px'}" header="Nuevo sprint" [modal]="true" class="p-fluid">
+    <form [formGroup]="formSprint" (ngSubmit)="crearSprint()">
+
+        <div class="field">
+            <label for="nombre">Nombre</label>
+            <input type="text" pInputText formControlName="nombre" id="nombre" />
+            @if (formSprint.get('nombre')?.hasError('required') && formSprint.get('nombre')?.touched) {
+            <small class="p-error"> El campo nombre es requerido </small>
+            }
+        </div>
+
+        <div class="field">
+            <label for="fecha_inicio_fin">Fecha de inicio y fecha de finalización</label>
+            <p-calendar formControlName="fecha_inicio_fin"
+                selectionMode="range"
+                dateFormat="dd/mm/yy"
+                [readonlyInput]="true"
+                [appendTo]="'body'" inputId="fecha_inicio_fin" />
+            @if (formSprint.get('fecha_inicio_fin')?.hasError('required') && formSprint.get('fecha_inicio_fin')?.touched) {
+            <small class="p-error"> El campo fecha de inicio y fin es requerido </small>
+            }
+        </div>
+
+        <div class="field">
+            <label for="objetivo">Objetivo</label>
+            <textarea rows="5" pInputTextarea formControlName="objetivo" id="objetivo">
+            </textarea>
+        </div>
+
+        <div class="field">
+            <label for="id_usuario">Encargado de sprint</label>
+            <p-dropdown formControlName="id_usuario" inputId="id_usuario" [options]="listaUsuariosDropdown" optionLabel="name"
+                optionValue="code" placeholder="Seleccione un encargado" [appendTo]="'body'" />
+        </div>
+
+        <button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-text" type="button" (click)="cerrarModalSprint()"></button>
+        <button pButton pRipple label="Guardar" icon="pi pi-check" class="p-button-text" type="submit"></button>
+
     </form>
 </p-dialog>

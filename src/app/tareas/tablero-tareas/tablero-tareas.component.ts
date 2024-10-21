@@ -6,18 +6,21 @@ import { ColoresEstadoTarea, EstadoTarea } from '../constantes/estado-tarea';
 import { Tarea } from '../interfaces/tarea';
 import Swal from 'sweetalert2';
 import { TareasService } from '../tareas.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { UsuariosService } from '@usuarios/usuarios.service';
 import { TipoTarea } from '../constantes/tipo-tarea';
 import { EditorModule } from 'primeng/editor';
 import { LocalStorageService } from '@shared/services/local-storage.service';
 import { Router } from '@angular/router';
 import { ProyectosService } from '@proyectos/proyectos.service';
+import { SprintsService } from '../sprints.service';
+import { MessagesModule } from 'primeng/messages';
+import { CalendarModule } from 'primeng/calendar';
 
 @Component({
   selector: 'app-tablero-tareas',
   standalone: true,
-  imports: [...sharedImports, CdkDrag, CdkDropList, CdkDropListGroup, ContextMenuModule, EditorModule],
+  imports: [...sharedImports, CdkDrag, CdkDropList, CdkDropListGroup, ContextMenuModule, EditorModule, MessagesModule, CalendarModule],
   templateUrl: './tablero-tareas.component.html',
   styleUrl: './tablero-tareas.component.scss'
 })
@@ -76,12 +79,28 @@ export class TableroTareasComponent implements OnInit {
 
   proyecto: any = {};
 
+  listaSprintsDropdown: any[] = [];
+
+  message: any[] = [];
+
+  sprintDialog: boolean = false;
+
+  formSprint = this.fb.group({
+    nombre: ['', [Validators.required]],
+    fecha_inicio_fin: ['', [Validators.required]],
+    objetivo: [''],
+    id_usuario: ['']
+  });
+
+  idSprint = new FormControl(0);
+
   constructor(
     private tareasService: TareasService,
     private usuariosService: UsuariosService,
     private fb: FormBuilder,
     private localStorageService: LocalStorageService,
-    private proyectosService: ProyectosService
+    private proyectosService: ProyectosService,
+    private sprintsService: SprintsService
   ) {
     this.idProyecto = this.localStorageService.getIdProyecto();
   }
@@ -89,6 +108,7 @@ export class TableroTareasComponent implements OnInit {
   ngOnInit(): void {
     this.obtenerLista();
     this.obtenerProyecto();
+    this.obtenerListaSprints();
     this.obtenerListaUsuarios();
   }
 
@@ -140,6 +160,19 @@ export class TableroTareasComponent implements OnInit {
         this.proyecto = data;
       },
       error: (error) => console.error('Error al listar proyecto', error)
+    });
+  }
+
+  obtenerListaSprints() {
+    this.message = [{ severity: 'warn', summary: 'Sin sprints!', detail: 'Este proyecto no tiene ningún sprint, crea uno para empezar a añadir tareas.' }];
+
+    this.sprintsService.findAll(this.idProyecto).subscribe({
+      next: (data) => {
+        this.listaSprintsDropdown = data
+        .map(iSprint => ({ code: iSprint.id, name: iSprint.nombre}));
+        this.idSprint.setValue(data[0]?.id);
+      },
+      error: (error) => console.error('Error al listar los sprints', error)
     });
   }
 
@@ -347,5 +380,53 @@ export class TableroTareasComponent implements OnInit {
 
   cerrarModal() {
     this.tareaDialog = false;
+  }
+
+  abrirModalCrearSprint() {
+    this.formSprint.reset();
+    this.sprintDialog = true;
+  }
+
+  onDropdownChange() {
+    console.log('sprint', this.idSprint.value);
+  }
+
+  crearSprint() {
+    if (this.formSprint.invalid) {
+      this.formSprint.markAllAsTouched();
+      return;
+    }
+    const fechaInicioFin: any = this.formSprint.value.fecha_inicio_fin;
+    if (!fechaInicioFin[1]) {
+      this.formSprint.patchValue({
+        fecha_inicio_fin: ''
+      });
+      return;
+    }
+    const [fechaInicio, fechaFin] = this.formSprint.value.fecha_inicio_fin ?? [];
+    const sprint: any = {
+      nombre: this.formSprint.value.nombre,
+      fecha_inicio: fechaInicio,
+      fecha_fin: fechaFin,
+      objetivo: this.formSprint.value.objetivo,
+      id_usuario: this.formSprint.value.id_usuario,
+      id_proyecto: this.idProyecto
+    }
+    this.sprintsService.create(sprint).subscribe({
+      next: () => {
+        this.sprintDialog = false;
+        this.obtenerListaSprints();
+        Swal.fire({
+          title: "Correcto!",
+          text: "La operación se ha sido completada.",
+          icon: "success"
+        });
+      },
+      error: (error) => console.error('Error al crear el sprint', error)
+    });
+  }
+
+  cerrarModalSprint() {
+    this.sprintDialog = false;
   }
 }
