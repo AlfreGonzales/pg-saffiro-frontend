@@ -29,11 +29,14 @@ export class ListadoTareasComponent implements OnInit {
 
   idProyecto!: number;
 
+  idSprint!: number;
+
   constructor(
     private tareasService: TareasService,
     private localStorageService: LocalStorageService,
   ) {
     this.idProyecto = this.localStorageService.getIdProyecto();
+    this.idSprint = this.localStorageService.getIdSprint();
   }
 
   ngOnInit(): void {
@@ -41,7 +44,7 @@ export class ListadoTareasComponent implements OnInit {
   }
 
   obtenerLista() {
-    this.tareasService.findAll(this.idProyecto).subscribe({
+    this.tareasService.findAll(this.idProyecto, this.idSprint).subscribe({
       next: (data) => {
         this.listaTareas = data;
       },

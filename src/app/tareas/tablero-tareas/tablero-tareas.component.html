@@ -20,7 +20,7 @@
                             (click)="abrirModalCrearSprint()"></button>
                     </div>
                     @if (listaSprintsDropdown.length !== 0) {
-                        <p-dropdown [options]="listaSprintsDropdown" [formControl]="idSprint" optionLabel="name" optionValue="code" [appendTo]="'body'" (onChange)="onDropdownChange()" />
+                        <p-dropdown [options]="listaSprintsDropdown" [formControl]="idSprint" optionLabel="name" optionValue="code" placeholder="Seleccione un sprint" [appendTo]="'body'" (onChange)="onDropdownChange()" />
                     }
                 </ng-template>
             </p-toolbar>

@@ -29,4 +29,16 @@ export class LocalStorageService {
   removeIdProyecto() {
     localStorage.removeItem('idProyecto');
   }
+
+  setIdSprint(idSprint: any) {
+    localStorage.setItem('idSprint', JSON.stringify(idSprint));
+  }
+
+  getIdSprint() {
+    return JSON.parse(localStorage.getItem('idSprint')!);
+  }
+
+  removeIdSprint() {
+    localStorage.removeItem('idSprint');
+  }
 }

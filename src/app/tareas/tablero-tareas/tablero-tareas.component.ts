@@ -106,14 +106,13 @@ export class TableroTareasComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.obtenerLista();
     this.obtenerProyecto();
     this.obtenerListaSprints();
     this.obtenerListaUsuarios();
   }
 
   obtenerLista() {
-    this.tareasService.findAll(this.idProyecto).subscribe({
+    this.tareasService.findAll(this.idProyecto, this.idSprint.value as any).subscribe({
       next: (data) => {
         this.obtenerListaEstados(data);
         this.obtenerListaTareas(data);
@@ -169,8 +168,14 @@ export class TableroTareasComponent implements OnInit {
     this.sprintsService.findAll(this.idProyecto).subscribe({
       next: (data) => {
         this.listaSprintsDropdown = data
-        .map(iSprint => ({ code: iSprint.id, name: iSprint.nombre}));
-        this.idSprint.setValue(data[0]?.id);
+          .map(iSprint => ({ code: iSprint.id, name: iSprint.nombre}));
+        if (this.listaSprintsDropdown.map(iSprint => iSprint.code).includes(this.localStorageService.getIdSprint())) {
+          this.idSprint.setValue(this.localStorageService.getIdSprint());
+        } else {
+          this.idSprint.setValue(data[0].id);
+        }
+        this.localStorageService.setIdSprint(this.idSprint.value);
+        this.obtenerLista();
       },
       error: (error) => console.error('Error al listar los sprints', error)
     });
@@ -331,6 +336,7 @@ export class TableroTareasComponent implements OnInit {
           id_proyecto: this.idProyecto
         },
         createSprintTareaDto: {
+          id_sprint: this.idSprint.value,
           id_usuario_dev: usuarioDev?.code || null,
           id_usuario_qa: usuarioQA?.code || null
         }
@@ -388,7 +394,8 @@ export class TableroTareasComponent implements OnInit {
   }
 
   onDropdownChange() {
-    console.log('sprint', this.idSprint.value);
+    this.localStorageService.setIdSprint(this.idSprint.value);
+    this.obtenerLista();
   }
 
   crearSprint() {
