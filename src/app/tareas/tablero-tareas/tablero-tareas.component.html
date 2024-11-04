@@ -27,45 +27,23 @@
             <div class="flex overflow-x-auto" cdkDropListGroup>
                 <div class="col flex-none w-25rem">
                     <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.NUEVA)[0]}">
-                        <h2>Nueva</h2>
+                        <h2>Nuevas</h2>
                         <div cdkDropList [cdkDropListData]="tareasNuevas" (cdkDropListDropped)="drop($event, estado.NUEVA)">
                             @for (item of tareasNuevas; track item.id) {
-                            <div class="card" cdkDrag [cdkDragData]="item" (contextmenu)="onContextMenu($event, item)">
-                                <div class="flex justify-content-between mb-3">
-                                    <div>
-                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
-                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
-                                    </div>
-                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" class="max-w-6rem" />
-                                </div>
-                                <div class="flex justify-content-between">
-                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
-                                    <p-tag [rounded]="true" [value]="estado.NUEVA.toUpperCase()" [style]="{background: coloresEstado.get(estado.NUEVA)[1]}" />
-                                </div>
-                            </div>
+                                <app-card-tarea [tarea]="item" [estado]="estado.NUEVA" (contextmenu)="onContextMenu($event, item)"></app-card-tarea>
                             }
                         </div>
                     </div>
                 </div>
 
                 <div class="col flex-none w-25rem">
-                    <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.APROBADA)[0]}">
-                        <h2>Aprobada</h2>
+                    <div class="card min-h-full relative" [ngStyle]="{backgroundColor: coloresEstado.get(estado.APROBADA)[0]}">
+                        <h2>Aprobadas
+                            <i class="pi pi-microchip-ai absolute" style="font-size: 2rem; top: 1rem; right: 2rem;" pButton pRipple [outlined]="true" severity="warning" [swal]="alertaConfirmacion" (confirm)="darPrioridades()"></i>
+                        </h2>
                         <div cdkDropList [cdkDropListData]="tareasAprobadas" (cdkDropListDropped)="drop($event, estado.APROBADA)">
                             @for (item of tareasAprobadas; track item.id) {
-                            <div class="card" cdkDrag [cdkDragData]="item" (contextmenu)="onContextMenu($event, item)">
-                                <div class="flex justify-content-between mb-3">
-                                    <div>
-                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
-                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
-                                    </div>
-                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" class="max-w-6rem" />
-                                </div>
-                                <div class="flex justify-content-between">
-                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
-                                    <p-tag [rounded]="true" [value]="estado.APROBADA.toUpperCase()" [style]="{background: coloresEstado.get(estado.APROBADA)[1]}" />
-                                </div>
-                            </div>
+                                <app-card-tarea [tarea]="item" [estado]="estado.APROBADA" (contextmenu)="onContextMenu($event, item)"></app-card-tarea>
                             }
                         </div>
                     </div>
@@ -76,19 +54,7 @@
                         <h2>En curso</h2>
                         <div cdkDropList [cdkDropListData]="tareasEnCurso" (cdkDropListDropped)="drop($event, estado.EN_CURSO)">
                             @for (item of tareasEnCurso; track item.id) {
-                            <div class="card" cdkDrag [cdkDragData]="item" (contextmenu)="onContextMenu($event, item)">
-                                <div class="flex justify-content-between mb-3">
-                                    <div>
-                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
-                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
-                                    </div>
-                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" class="max-w-6rem" />
-                                </div>
-                                <div class="flex justify-content-between">
-                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
-                                    <p-tag [rounded]="true" [value]="estado.EN_CURSO.toUpperCase()" [style]="{background: coloresEstado.get(estado.EN_CURSO)[1]}" />
-                                </div>
-                            </div>
+                                <app-card-tarea [tarea]="item" [estado]="estado.EN_CURSO" (contextmenu)="onContextMenu($event, item)"></app-card-tarea>
                             }
                         </div>
                     </div>
@@ -99,19 +65,7 @@
                         <h2>Calidad</h2>
                         <div cdkDropList [cdkDropListData]="tareasCalidad" (cdkDropListDropped)="drop($event, estado.CALIDAD)">
                             @for (item of tareasCalidad; track item.id) {
-                            <div class="card" cdkDrag [cdkDragData]="item" (contextmenu)="onContextMenu($event, item)">
-                                <div class="flex justify-content-between mb-3">
-                                    <div>
-                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
-                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
-                                    </div>
-                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" class="max-w-6rem" />
-                                </div>
-                                <div class="flex justify-content-between">
-                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
-                                    <p-tag [rounded]="true" [value]="estado.CALIDAD.toUpperCase()" [style]="{background: coloresEstado.get(estado.CALIDAD)[1]}" />
-                                </div>
-                            </div>
+                                <app-card-tarea [tarea]="item" [estado]="estado.CALIDAD" (contextmenu)="onContextMenu($event, item)"></app-card-tarea>
                             }
                         </div>
                     </div>
@@ -122,19 +76,7 @@
                         <h2>Certificación</h2>
                         <div cdkDropList [cdkDropListData]="tareasCertificacion" (cdkDropListDropped)="drop($event, estado.CERTIFICACION)">
                             @for (item of tareasCertificacion; track item.id) {
-                            <div class="card" cdkDrag [cdkDragData]="item" (contextmenu)="onContextMenu($event, item)">
-                                <div class="flex justify-content-between mb-3">
-                                    <div>
-                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
-                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
-                                    </div>
-                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" class="max-w-6rem" />
-                                </div>
-                                <div class="flex justify-content-between">
-                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
-                                    <p-tag [rounded]="true" [value]="estado.CERTIFICACION.toUpperCase()" [style]="{background: coloresEstado.get(estado.CERTIFICACION)[1]}" />
-                                </div>
-                            </div>
+                                <app-card-tarea [tarea]="item" [estado]="estado.CERTIFICACION" (contextmenu)="onContextMenu($event, item)"></app-card-tarea>
                             }
                         </div>
                     </div>
@@ -143,22 +85,10 @@
 
                 <div class="col flex-none w-25rem">
                     <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.ACABADA)[0]}">
-                        <h2>Acabada</h2>
+                        <h2>Acabadas</h2>
                         <div cdkDropList [cdkDropListData]="tareasAcabadas" (cdkDropListDropped)="drop($event, estado.ACABADA)">
                             @for (item of tareasAcabadas; track item.id) {
-                            <div class="card" cdkDrag [cdkDragData]="item">
-                                <div class="flex justify-content-between mb-3">
-                                    <div>
-                                        <span class="block text-900 font-bold text-xl mb-3">{{ item.id + ' - ' + item.tarea.nombre }}</span>
-                                        <div class="text-500 font-medium">{{ item.tarea.created_at | date:'dd/MM/yyyy' }}</div>
-                                    </div>
-                                    <p-tag [rounded]="true" [value]="tipo.get(item.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" class="max-w-6rem" />
-                                </div>
-                                <div class="flex justify-content-between">
-                                    <span class="text-green-500 font-medium">{{ item.usuario_dev ? item.usuario_dev.nombres : 'No asignado' }}</span>
-                                    <p-tag [rounded]="true" [value]="estado.ACABADA.toUpperCase()" [style]="{background: coloresEstado.get(estado.ACABADA)[1]}" />
-                                </div>
-                            </div>
+                                <app-card-tarea [tarea]="item" [estado]="estado.ACABADA"></app-card-tarea>
                             }
                         </div>
                     </div>

@@ -1,10 +1,10 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
 import { sharedImports } from '@shared/shared-imports';
 import { ContextMenu, ContextMenuModule } from 'primeng/contextmenu';
 import { ColoresEstadoTarea, EstadoTarea } from '../constantes/estado-tarea';
 import { Tarea } from '../interfaces/tarea';
-import Swal from 'sweetalert2';
+import Swal, { SweetAlertOptions } from 'sweetalert2';
 import { TareasService } from '../tareas.service';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { UsuariosService } from '@usuarios/usuarios.service';
@@ -16,13 +16,17 @@ import { ProyectosService } from '@proyectos/proyectos.service';
 import { SprintsService } from '../sprints.service';
 import { MessagesModule } from 'primeng/messages';
 import { CalendarModule } from 'primeng/calendar';
+import { FloorPipe } from '../floor.pipe';
+import { forkJoin } from 'rxjs';
+import { CardTareaComponent } from '../componentes/card-tarea/card-tarea.component';
 
 @Component({
   selector: 'app-tablero-tareas',
   standalone: true,
-  imports: [...sharedImports, CdkDrag, CdkDropList, CdkDropListGroup, ContextMenuModule, EditorModule, MessagesModule, CalendarModule],
+  imports: [...sharedImports, CardTareaComponent, CdkDrag, CdkDropList, CdkDropListGroup, ContextMenuModule, EditorModule, MessagesModule, CalendarModule, FloorPipe],
   templateUrl: './tablero-tareas.component.html',
-  styleUrl: './tablero-tareas.component.scss'
+  styleUrl: './tablero-tareas.component.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class TableroTareasComponent implements OnInit {
   estado = EstadoTarea;
@@ -93,6 +97,17 @@ export class TableroTareasComponent implements OnInit {
   });
 
   idSprint = new FormControl(0);
+
+  alertaConfirmacion: SweetAlertOptions = {
+    title: "Desea confirmar la operación?",
+    text: "Esta acción es irreversible!",
+    icon: "question",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Confirmar",
+    cancelButtonText: "Cancelar"
+  };
 
   constructor(
     private tareasService: TareasService,
@@ -252,16 +267,7 @@ export class TableroTareasComponent implements OnInit {
   }
 
   async cambiaEstado(estado: EstadoTarea, tarea: Tarea) {
-    const resultado = await Swal.fire({
-      title: "Desea confirmar la operación?",
-      text: "Esta acción es irreversible!",
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Confirmar",
-      cancelButtonText: "Cancelar"
-    });
+    const resultado = await Swal.fire(this.alertaConfirmacion);
     if (resultado.isConfirmed) {
       const tareaDto: any = {
         updateSprintTareaDto: {
@@ -435,5 +441,36 @@ export class TableroTareasComponent implements OnInit {
 
   cerrarModalSprint() {
     this.sprintDialog = false;
+  }
+
+  darPrioridades() {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      allowOutsideClick: false
+    });
+    const tareas = this.tareasAprobadas.map(iTarea => ({
+        tipo: iTarea.tarea.tipo,
+        tiempo: iTarea.tarea.tiempo_estimado,
+        peso: iTarea.tarea.peso,
+        bugs: iTarea.tarea.bugs_permitidos
+      })
+    );
+    this.tareasService.predecir(tareas).subscribe({
+      next: (data: any) => {
+        const requests = this.tareasAprobadas.map((iTarea, index) =>
+          this.tareasService.update(0, iTarea.id_tarea, { updateTareaDto: { prioridad: data[index] } })
+        );
+        forkJoin(requests).subscribe({
+          next: () => {
+            this.obtenerLista();
+            setTimeout(() => Swal.close(), 3000);
+          },
+          error: (error) => console.error('Error al actualizar las prioridades de las tareas', error)
+        });
+      },
+      error: (error) => console.error('Error al predecir prioridades de tareas', error)
+    });
   }
 }

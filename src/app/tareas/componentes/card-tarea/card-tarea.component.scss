@@ -1,0 +1,21 @@
+.card {
+    margin-bottom: 2rem;
+}
+
+.card-priority {
+    position: absolute;
+    top: 0.25rem;
+    left: 0.5rem;
+    font-size: 1.5rem;
+  
+    // Colores según la prioridad
+    &.importance-1 { color: #4caf50; font-weight: 400; }  // verde
+    &.importance-2 { color: #66bb6a; font-weight: 400; }
+    &.importance-3 { color: #81c784; font-weight: 500; }
+    &.importance-4 { color: #aed581; font-weight: 500; }
+    &.importance-5 { color: #ffeb3b; font-weight: 600; }  // amarillo
+    &.importance-6 { color: #ffc107; font-weight: 600; }
+    &.importance-7 { color: #ff9800; font-weight: 700; }
+    &.importance-8 { color: #ff7043; font-weight: 700; }
+    &.importance-9 { color: #f44336; font-weight: 900; }  // rojo
+}

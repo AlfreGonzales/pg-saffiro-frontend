@@ -23,4 +23,8 @@ export class TareasService {
   update(idSprintTarea: number, idTarea: number, tarea: any) {
     return this.http.patch(`${this.baseUrl}${idSprintTarea}/${idTarea}`, tarea);
   }
+
+  predecir(tareas: any) {
+    return this.http.post(`http://localhost:5000/predecir`, tareas);
+  }
 }

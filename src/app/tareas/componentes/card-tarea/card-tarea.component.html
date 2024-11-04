@@ -1,0 +1,14 @@
+<div class="card relative" cdkDrag [cdkDragData]="tarea" (contextmenu)="onContextMenu($event)">
+    <span class="card-priority importance-{{ tarea.tarea.prioridad | floor }}">{{ tarea.tarea.prioridad }}</span>
+    <div class="flex justify-content-between mb-3">
+        <div>
+            <span class="block text-900 font-bold text-lg mb-3">{{ (tarea.id | number: '3.0') + ' - ' + tarea.tarea.nombre }}</span>
+            <div class="text-500 font-medium">{{ tarea.tarea.created_at | date:'dd/MM/yyyy' }}</div>
+        </div>
+        <p-tag [rounded]="true" [value]="tipo.get(tarea.tarea.tipo)" [style]="{background: 'var(--cyan-400)'}" class="max-w-6rem" />
+    </div>
+    <div class="flex justify-content-between">
+        <span class="text-green-500 font-medium">{{ tarea.usuario_dev ? tarea.usuario_dev.nombres : 'No asignado' }}</span>
+        <p-tag [rounded]="true" [value]="estado.toUpperCase()" [style]="{background: coloresEstado.get(estado)[1]}" />
+    </div>
+</div>
