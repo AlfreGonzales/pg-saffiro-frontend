@@ -13,15 +13,36 @@
     </button>
 
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-calendar"></i>
+        <button class="p-link layout-topbar-button" (click)="op.toggle($event)">
+            <i class="pi pi-bell"></i>
         </button>
         <p-menu #menu [model]="items" [popup]="true" />
         <button class="p-link layout-topbar-button" (click)="menu.toggle($event)">
             <i class="pi pi-user"></i>
         </button>
-        <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
+        <!-- <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
             <i class="pi pi-cog"></i>
-        </button>
+        </button> -->
     </div>
 </div>
+
+<p-overlayPanel #op>
+    <div class="flex flex-column gap-3 w-25rem">
+        <div>
+            <span class="font-medium text-900 block mb-2">Notificaciones</span>
+            <ul class="list-none p-0 m-0 flex flex-column gap-3">
+                <li class="flex align-items-center gap-2">
+                    <img [src]="'https://primefaces.org/cdn/primeng/images/demo/avatar/'" style="width: 32px" />
+                    <div>
+                        <span class="font-medium"> nombre </span>
+                        <div class="text-sm text-color-secondary">email </div>
+                    </div>
+                    <div class="flex align-items-center gap-2 text-color-secondary ml-auto text-sm">
+                        <span> rol </span>
+                        <i class="pi pi-angle-down"></i>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</p-overlayPanel>
