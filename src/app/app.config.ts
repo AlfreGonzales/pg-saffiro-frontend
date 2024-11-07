@@ -10,6 +10,9 @@ import { authInfoInterceptor } from './auth/auth-info.interceptor';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { errorHandlerInterceptor } from './shared/interceptors/error-handler.interceptor';
+import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
+import { provideDatabase, getDatabase } from '@angular/fire/database';
+import { environment } from '../enviroments/environment';
 
 registerLocaleData(localeEs, 'es');
 
@@ -20,6 +23,8 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(HttpClientModule, SweetAlert2Module.forRoot()),
     provideHttpClient(withInterceptors([authInfoInterceptor, errorHandlerInterceptor])),
     MessageService,
-    { provide: LOCALE_ID, useValue: 'es' }
+    { provide: LOCALE_ID, useValue: 'es' },
+    provideFirebaseApp(() => initializeApp(environment.firebaseConfig)),
+    provideDatabase(() => getDatabase())
   ]
 };

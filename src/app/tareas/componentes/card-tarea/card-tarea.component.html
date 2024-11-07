@@ -1,4 +1,4 @@
-<div class="card relative" cdkDrag [cdkDragData]="tarea" (contextmenu)="onContextMenu($event)">
+<div class="card relative" cdkDrag [cdkDragData]="tarea" (contextmenu)="onContextMenu($event)" [ngClass]="{'notificacion': tarea.noti}" (click)="notiLeida()">
     <span class="card-priority importance-{{ tarea.tarea.prioridad | floor }}">{{ tarea.tarea.prioridad }}</span>
     <div class="flex justify-content-between mb-3">
         <div>

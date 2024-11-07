@@ -11,7 +11,7 @@ import { UsuariosService } from '@usuarios/usuarios.service';
 import { TipoTarea } from '../constantes/tipo-tarea';
 import { EditorModule } from 'primeng/editor';
 import { LocalStorageService } from '@shared/services/local-storage.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProyectosService } from '@proyectos/proyectos.service';
 import { SprintsService } from '../sprints.service';
 import { MessagesModule } from 'primeng/messages';
@@ -109,18 +109,28 @@ export class TableroTareasComponent implements OnInit {
     cancelButtonText: "Cancelar"
   };
 
+  idTareaNoti!: any;
+
+  errores: any[] = [];
+
   constructor(
     private tareasService: TareasService,
     private usuariosService: UsuariosService,
     private fb: FormBuilder,
     private localStorageService: LocalStorageService,
     private proyectosService: ProyectosService,
-    private sprintsService: SprintsService
+    private sprintsService: SprintsService,
+    private route: ActivatedRoute
   ) {
     this.idProyecto = this.localStorageService.getIdProyecto();
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      if(params['id_elemento']) {
+        this.idTareaNoti = Number(params['id_elemento']);
+      }
+    });
     this.obtenerProyecto();
     this.obtenerListaSprints();
     this.obtenerListaUsuarios();
@@ -136,7 +146,11 @@ export class TableroTareasComponent implements OnInit {
     });
   }
 
-  obtenerListaEstados(listaTareas: Tarea[]) {
+  obtenerListaEstados(listaTareas: any[]) {
+    if (this.idTareaNoti) {
+      const index = listaTareas.findIndex(iTarea => iTarea.id_tarea === this.idTareaNoti);
+      listaTareas[index].noti = true;
+    }
     this.tareasNuevas = listaTareas.filter(
       (tarea) => tarea.estado === this.estado.NUEVA
     );
@@ -216,6 +230,23 @@ export class TableroTareasComponent implements OnInit {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
+      if (event.previousContainer.id.split('-').at(-1) === '0') {
+        this.errores = [];
+        if (!event.item.data.tarea.tiempo_estimado)
+          this.errores.push("Tiempo estimado");
+        if (!event.item.data.tarea.peso)
+          this.errores.push("Peso");
+        if (!event.item.data.tarea.bugs_permitidos)
+          this.errores.push("Bugs permitidos");
+        if (this.errores.length > 0) {
+          Swal.fire({
+            title: `Error, los siguientes campos son requeridos:`,
+            text: this.errores.join(', '),
+            icon: "error"
+          });
+          return;
+        }
+      }
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
@@ -443,12 +474,14 @@ export class TableroTareasComponent implements OnInit {
     this.sprintDialog = false;
   }
 
-  darPrioridades() {
-    Swal.fire({
-      title: '¿Estás seguro?',
-      text: 'Esta acción no se puede deshacer.',
-      icon: 'warning',
-      allowOutsideClick: false
+  async darPrioridades() {
+    await Swal.fire({
+      title: 'Espera un poco...',
+      icon: 'success',
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true
     });
     const tareas = this.tareasAprobadas.map(iTarea => ({
         tipo: iTarea.tarea.tipo,
@@ -465,7 +498,6 @@ export class TableroTareasComponent implements OnInit {
         forkJoin(requests).subscribe({
           next: () => {
             this.obtenerLista();
-            setTimeout(() => Swal.close(), 3000);
           },
           error: (error) => console.error('Error al actualizar las prioridades de las tareas', error)
         });

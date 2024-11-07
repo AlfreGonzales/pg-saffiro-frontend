@@ -23,6 +23,15 @@ export class CardTareaComponent {
   coloresEstado: any = ColoresEstadoTarea;
 
   onContextMenu(event: MouseEvent) {
+    if (this.tarea.noti) {
+      this.tarea.noti = false;
+    }
     this.contextMenu.emit(event);
+  }
+
+  notiLeida() {
+    if (this.tarea.noti) {
+      this.tarea.noti = false;
+    }
   }
 }
