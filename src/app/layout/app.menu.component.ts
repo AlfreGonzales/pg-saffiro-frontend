@@ -26,6 +26,7 @@ export class AppMenuComponent implements OnInit {
                 label: 'Monitoreo',
                 items: [
                     { id: Modulos.DASHBOARDS, label: 'Dashboards', icon: 'pi pi-fw pi-home', routerLink: ['/'] },
+                    { id: Modulos.REPORTES, label: 'Reportes', icon: 'pi pi-fw pi-file-export', routerLink: ['/reportes'] },
                     { id: Modulos.LOG_ACCESOS, label: 'Log de accesos', icon: 'pi pi-fw pi-history', routerLink: ['/log-accesos'] }
                 ]
             },

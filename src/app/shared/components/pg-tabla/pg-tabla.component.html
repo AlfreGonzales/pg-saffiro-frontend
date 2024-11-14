@@ -1,10 +1,14 @@
 <p-table #dt [value]="data" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-    [globalFilterFields]="globalFilterFields" [paginator]="true" [rowsPerPageOptions]="[10,20,30]"
+    [globalFilterFields]="globalFilterFields" [paginator]="paginator" [rowsPerPageOptions]="[10,20,30]"
     [showCurrentPageReport]="true"
-    currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" [rowHover]="true" dataKey="id">
+    currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" [rowHover]="true" dataKey="id" id="content">
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 class="m-0">{{ title }}</h5>
+            <div>
+                <p-button icon="pi pi-file-excel" label="EXCEL" (onClick)="dt.exportCSV()" class="mr-2" />
+                <p-button icon="pi pi-file-pdf" label="PDF" (onClick)="generarPDF()" />
+            </div>
             <span class="block mt-2 md:mt-0 p-input-icon-left">
                 <i class="pi pi-search"></i>
                 <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..." class="w-full sm:w-auto" />
@@ -41,22 +45,24 @@
                 <td>
                 @switch (col.type) {
                     @case ('state') {
-                        <p-tag [rounded]="true" [value]="rowData[col.field] ? 'ACTIVO' : 'INACTIVO'" [severity]="rowData[col.field] ? 'success' : 'danger'" />
+                        <p-tag [rounded]="true" [value]="getNestedValue(rowData, col.field) ? 'ACTIVO' : 'INACTIVO'" [severity]="getNestedValue(rowData, col.field) ? 'success' : 'danger'" />
                     }
                     @case ('date') {
-                        {{ rowData[col.field] | date:'dd/MM/yyyy' }}
+                        {{ getNestedValue(rowData, col.field) | date:'dd/MM/yyyy' }}
                     }
                     @case ('fullDate') {
-                        {{ rowData[col.field] | date:'dd/MM/yyyy, HH:mm:ss' }}
+                        {{ getNestedValue(rowData, col.field) | date:'dd/MM/yyyy, HH:mm:ss' }}
                     }
                     @case ('chip') {
-                        {{ rowData[col.field] }}
+                        @for (item of getNestedValue(rowData, col.field).split(', '); track item) {
+                            <p-chip [label]="item" class="mr-2" />
+                        }
                     }
                     @case ('money') {
-                        {{ rowData[col.field] }}
+                        {{ getNestedValue(rowData, col.field) | currency:'Bs.' }}
                     }
                     @case ('short') {
-                        {{ rowData[col.field] | slice:0:50 }}...
+                        {{ getNestedValue(rowData, col.field) | slice:0:50 }}...
                     }
                     @case ('actions') {
                         <div class="flex">
@@ -73,8 +79,12 @@
                         }
                         </div>
                     }
+                    <!-- NOTA: TEMP -->
+                    @case ('personalizado') {
+                        {{ col.accion(getNestedValue(rowData, col.field)) }}
+                    }
                     @default {
-                        {{ rowData[col.field] }}
+                        {{ getNestedValue(rowData, col.field) }}
                     }
                 }
                 </td>

@@ -15,12 +15,27 @@
                     }
                 </ng-template>
                 <ng-template pTemplate="right">
+                    @if (listaSprintsDropdown.length !== 0) {
+                        <div class="my-2">
+                            <button pButton pRipple label="Ver sprint" icon="pi pi-eye" [text]="true" [raised]="true" class="p-button-info mr-3"
+                                (click)="abrirModalVerSprint()"></button>
+                        </div>
+                    }
                     <div class="my-2">
                         <button pButton pRipple label="Nuevo sprint" icon="pi pi-plus" class="p-button-success mr-3"
                             (click)="abrirModalCrearSprint()"></button>
                     </div>
                     @if (listaSprintsDropdown.length !== 0) {
-                        <p-dropdown [options]="listaSprintsDropdown" [formControl]="idSprint" optionLabel="name" optionValue="code" placeholder="Seleccione un sprint" [appendTo]="'body'" (onChange)="onDropdownChange()" />
+                        <p-dropdown [options]="listaSprintsDropdown" [formControl]="idSprint" optionLabel="name" optionValue="code" placeholder="Seleccione un sprint" [appendTo]="'body'" (onChange)="onDropdownChange()" styleClass="w-15rem">
+                            <ng-template let-sprint pTemplate="item">
+                                <div class="flex justify-content-between">
+                                    <div>{{ sprint.name }}</div>
+                                    <p-tag [rounded]="true" [value]="validarEstadoSprint(sprint.fechaI, sprint.fechaF) === 1 ?
+                                    'Actual' : validarEstadoSprint(sprint.fechaI, sprint.fechaF) === 2 ? 'Pasado' : 'Futuro'"
+                                    [severity]="validarEstadoSprint(sprint.fechaI, sprint.fechaF) === 1 ? 'info' : 'secondary'" />
+                                </div>
+                            </ng-template>
+                        </p-dropdown>
                     }
                 </ng-template>
             </p-toolbar>
@@ -28,7 +43,7 @@
                 <div class="col flex-none w-25rem">
                     <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.NUEVA)[0]}">
                         <h2>Nuevas</h2>
-                        <div cdkDropList [cdkDropListData]="tareasNuevas" (cdkDropListDropped)="drop($event, estado.NUEVA)">
+                        <div cdkDropList [cdkDropListData]="tareasNuevas" (cdkDropListDropped)="drop($event, estado.NUEVA)" id="list-task-0">
                             @for (item of tareasNuevas; track item.id) {
                                 <app-card-tarea [tarea]="item" [estado]="estado.NUEVA" (contextmenu)="onContextMenu($event, item)"></app-card-tarea>
                             }
@@ -39,9 +54,11 @@
                 <div class="col flex-none w-25rem">
                     <div class="card min-h-full relative" [ngStyle]="{backgroundColor: coloresEstado.get(estado.APROBADA)[0]}">
                         <h2>Aprobadas
-                            <i class="pi pi-microchip-ai absolute" style="font-size: 2rem; top: 1rem; right: 2rem;" pButton pRipple [outlined]="true" severity="warning" [swal]="alertaConfirmacion" (confirm)="darPrioridades()"></i>
+                            @if (listaSprintsDropdown.length !== 0) {
+                                <i class="pi pi-microchip-ai absolute" style="font-size: 2rem; top: 1rem; right: 2rem;" pButton pRipple [outlined]="true" severity="warning" [swal]="alertaConfirmacion" (confirm)="darPrioridades()"></i>
+                            }
                         </h2>
-                        <div cdkDropList [cdkDropListData]="tareasAprobadas" (cdkDropListDropped)="drop($event, estado.APROBADA)">
+                        <div cdkDropList [cdkDropListData]="tareasAprobadas" (cdkDropListDropped)="drop($event, estado.APROBADA)" id="list-task-1">
                             @for (item of tareasAprobadas; track item.id) {
                                 <app-card-tarea [tarea]="item" [estado]="estado.APROBADA" (contextmenu)="onContextMenu($event, item)"></app-card-tarea>
                             }
@@ -52,7 +69,7 @@
                 <div class="col flex-none w-25rem">
                     <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.EN_CURSO)[0]}">
                         <h2>En curso</h2>
-                        <div cdkDropList [cdkDropListData]="tareasEnCurso" (cdkDropListDropped)="drop($event, estado.EN_CURSO)">
+                        <div cdkDropList [cdkDropListData]="tareasEnCurso" (cdkDropListDropped)="drop($event, estado.EN_CURSO)" id="list-task-2">
                             @for (item of tareasEnCurso; track item.id) {
                                 <app-card-tarea [tarea]="item" [estado]="estado.EN_CURSO" (contextmenu)="onContextMenu($event, item)"></app-card-tarea>
                             }
@@ -63,7 +80,7 @@
                 <div class="col flex-none w-25rem">
                     <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.CALIDAD)[0]}">
                         <h2>Calidad</h2>
-                        <div cdkDropList [cdkDropListData]="tareasCalidad" (cdkDropListDropped)="drop($event, estado.CALIDAD)">
+                        <div cdkDropList [cdkDropListData]="tareasCalidad" (cdkDropListDropped)="drop($event, estado.CALIDAD)" id="list-task-3">
                             @for (item of tareasCalidad; track item.id) {
                                 <app-card-tarea [tarea]="item" [estado]="estado.CALIDAD" (contextmenu)="onContextMenu($event, item)"></app-card-tarea>
                             }
@@ -74,7 +91,7 @@
                 <div class="col flex-none w-25rem">
                     <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.CERTIFICACION)[0]}">
                         <h2>Certificación</h2>
-                        <div cdkDropList [cdkDropListData]="tareasCertificacion" (cdkDropListDropped)="drop($event, estado.CERTIFICACION)">
+                        <div cdkDropList [cdkDropListData]="tareasCertificacion" (cdkDropListDropped)="drop($event, estado.CERTIFICACION)" id="list-task-4">
                             @for (item of tareasCertificacion; track item.id) {
                                 <app-card-tarea [tarea]="item" [estado]="estado.CERTIFICACION" (contextmenu)="onContextMenu($event, item)"></app-card-tarea>
                             }
@@ -86,7 +103,7 @@
                 <div class="col flex-none w-25rem">
                     <div class="card min-h-full" [ngStyle]="{backgroundColor: coloresEstado.get(estado.ACABADA)[0]}">
                         <h2>Acabadas</h2>
-                        <div cdkDropList [cdkDropListData]="tareasAcabadas" (cdkDropListDropped)="drop($event, estado.ACABADA)">
+                        <div cdkDropList [cdkDropListData]="tareasAcabadas" (cdkDropListDropped)="drop($event, estado.ACABADA)" id="list-task-5">
                             @for (item of tareasAcabadas; track item.id) {
                                 <app-card-tarea [tarea]="item" [estado]="estado.ACABADA"></app-card-tarea>
                             }
@@ -107,7 +124,7 @@
                     <label for="nombre">Nombre</label>
                     <input type="text" pInputText formControlName="nombre" id="nombre" />
                     @if (formTarea.get('nombre')?.hasError('required') && formTarea.get('nombre')?.touched) {
-                    <small> El campo nombre es requerido </small>
+                    <small class="p-error"> El campo nombre es requerido </small>
                     }
                 </div>
 
@@ -115,7 +132,7 @@
                     <label for="descripcion">Descripción</label>
                     <p-editor formControlName="descripcion" [style]="{ height: '320px' }" inputId="descripcion" />
                     @if (formTarea.get('descripcion')?.hasError('required') && formTarea.get('descripcion')?.touched) {
-                    <small> El campo descripción es requerido </small>
+                    <small class="p-error"> El campo descripción es requerido </small>
                     }
                 </div>
             </div>
@@ -126,7 +143,7 @@
                     <p-dropdown formControlName="tipo" inputId="tipo" [options]="listaTiposDropdown" optionLabel="name"
                         placeholder="Seleccione un tipo de tarea" [appendTo]="'body'" />
                     @if (formTarea.get('tipo')?.hasError('required') && formTarea.get('tipo')?.touched) {
-                    <small> El campo tipo de tarea es requerido </small>
+                    <small class="p-error"> El campo tipo de tarea es requerido </small>
                     }
                 </div>
                 

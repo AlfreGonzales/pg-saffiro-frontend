@@ -13,6 +13,8 @@ import { TableroProyectosComponent } from './proyectos/tablero-proyectos/tablero
 import { TableroTareasComponent } from './tareas/tablero-tareas/tablero-tareas.component';
 import { ListadoTareasComponent } from './tareas/listado-tareas/listado-tareas.component';
 import { EquiposComponent } from './equipos/equipos.component';
+import { EmpresasComponent } from './empresas/empresas.component';
+import { ReportesComponent } from './reportes/reportes.component';
 
 export const routes: Routes = [
   {
@@ -29,6 +31,12 @@ export const routes: Routes = [
         path: '',
         component: DashboardsComponent,
         title: 'Dashboards',
+        canActivate: [loginGuard]
+      },
+      {
+        path: 'reportes',
+        component: ReportesComponent,
+        title: 'Reportes',
         canActivate: [loginGuard]
       },
       {
@@ -88,6 +96,12 @@ export const routes: Routes = [
             canActivate: [loginGuard]
           },
         ]
+      },
+      {
+        path: 'empresas',
+        component: EmpresasComponent,
+        title: 'Empresas',
+        canActivate: [loginGuard]
       },
     ],
   },

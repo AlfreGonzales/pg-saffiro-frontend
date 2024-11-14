@@ -1,5 +1,6 @@
 export enum Modulos {
     DASHBOARDS = 'dashboards',
+    REPORTES = 'reportes',
     LOG_ACCESOS = 'logAccesos',
     ROLES = 'roles',
     USUARIOS = 'usuarios',

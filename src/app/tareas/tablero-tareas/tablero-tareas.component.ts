@@ -1,8 +1,8 @@
-import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, CdkDropList, CdkDropListGroup, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { Component, OnInit, signal, ViewChild, ViewEncapsulation } from '@angular/core';
 import { sharedImports } from '@shared/shared-imports';
 import { ContextMenu, ContextMenuModule } from 'primeng/contextmenu';
-import { ColoresEstadoTarea, EstadoTarea } from '../constantes/estado-tarea';
+import { ColoresEstadoTarea, EstadoTarea, NombreColumna } from '../constantes/estado-tarea';
 import { Tarea } from '../interfaces/tarea';
 import Swal, { SweetAlertOptions } from 'sweetalert2';
 import { TareasService } from '../tareas.service';
@@ -16,14 +16,14 @@ import { ProyectosService } from '@proyectos/proyectos.service';
 import { SprintsService } from '../sprints.service';
 import { MessagesModule } from 'primeng/messages';
 import { CalendarModule } from 'primeng/calendar';
-import { FloorPipe } from '../floor.pipe';
 import { forkJoin } from 'rxjs';
 import { CardTareaComponent } from '../componentes/card-tarea/card-tarea.component';
+import { Sprint } from '@tareas/interfaces/sprint';
 
 @Component({
   selector: 'app-tablero-tareas',
   standalone: true,
-  imports: [...sharedImports, CardTareaComponent, CdkDrag, CdkDropList, CdkDropListGroup, ContextMenuModule, EditorModule, MessagesModule, CalendarModule, FloorPipe],
+  imports: [...sharedImports, CardTareaComponent, CdkDropList, CdkDropListGroup, ContextMenuModule, EditorModule, MessagesModule, CalendarModule],
   templateUrl: './tablero-tareas.component.html',
   styleUrl: './tablero-tareas.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -82,6 +82,8 @@ export class TableroTareasComponent implements OnInit {
   idProyecto!: number;
 
   proyecto: any = {};
+
+  listaSprints!: Sprint[];
 
   listaSprintsDropdown: any[] = [];
 
@@ -196,8 +198,9 @@ export class TableroTareasComponent implements OnInit {
 
     this.sprintsService.findAll(this.idProyecto).subscribe({
       next: (data) => {
-        this.listaSprintsDropdown = data
-          .map(iSprint => ({ code: iSprint.id, name: iSprint.nombre}));
+        this.listaSprints = data;
+        this.listaSprintsDropdown = this.listaSprints
+          .map(iSprint => ({ code: iSprint.id, name: iSprint.nombre, fechaI: iSprint.fecha_inicio, fechaF: iSprint.fecha_fin }));
         if (this.listaSprintsDropdown.map(iSprint => iSprint.code).includes(this.localStorageService.getIdSprint())) {
           this.idSprint.setValue(this.localStorageService.getIdSprint());
         } else {
@@ -226,7 +229,7 @@ export class TableroTareasComponent implements OnInit {
     });
   }
 
-  drop(event: CdkDragDrop<Tarea[]>, columnaEstado: EstadoTarea) {
+  async drop(event: CdkDragDrop<Tarea[]>, columnaEstado: EstadoTarea) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
@@ -244,6 +247,21 @@ export class TableroTareasComponent implements OnInit {
             text: this.errores.join(', '),
             icon: "error"
           });
+          return;
+        }
+      }
+      if (Math.abs(Number(event.container.id.split('-').at(-1)) - Number(event.previousContainer.id.split('-').at(-1))) > 1) {
+        const resultado = await Swal.fire({
+          title: `Desea saltar de la columna "${NombreColumna.get(Number(event.previousContainer.id.split('-').at(-1)))}" a la columna "${NombreColumna.get(Number(event.container.id.split('-').at(-1)))}"?`,
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Confirmar",
+          cancelButtonText: "Cancelar",
+          allowOutsideClick: false
+        });
+        if (resultado.isDismissed) {
           return;
         }
       }
@@ -427,6 +445,19 @@ export class TableroTareasComponent implements OnInit {
 
   abrirModalCrearSprint() {
     this.formSprint.reset();
+    this.editting = false;
+    this.sprintDialog = true;
+  }
+
+  abrirModalVerSprint() {
+    let sprint: any = this.listaSprints.find(iSprint => iSprint.id === this.idSprint.value);
+    this.editting = true;
+    this.formSprint.patchValue({
+      nombre: sprint.nombre,
+      fecha_inicio_fin: [new Date(sprint.fecha_inicio), new Date(sprint.fecha_fin)] as any,
+      objetivo: sprint.objetivo,
+      id_usuario: sprint.id_usuario
+    });
     this.sprintDialog = true;
   }
 
@@ -447,27 +478,68 @@ export class TableroTareasComponent implements OnInit {
       });
       return;
     }
+    if (this.listaSprints.length !== 0) {
+      if (!this.editting) {
+        if (new Date(this.listaSprints[0]!.fecha_fin) > fechaInicioFin[0]) {
+          Swal.fire({
+            title: `Error, hay un cruce de fechas con el sprint anterior!`,
+            icon: "error"
+          });
+          return;
+        }
+      } else {
+        const index = this.listaSprints.findIndex(iSprint => iSprint.id === this.idSprint.value);
+        let errores = [];
+        if (new Date(this.listaSprints[index + 1]?.fecha_fin) > fechaInicioFin[0]) {
+          errores.push('sprint anterior');
+        }
+        if (new Date(this.listaSprints[index - 1]?.fecha_inicio) < fechaInicioFin[1]) {
+          errores.push('sprint posterior');
+        }
+        if(errores.length !== 0) {
+          Swal.fire({
+            title: `Error, hay un cruce de fechas con el ${errores.join(' y el ')}!`,
+            icon: "error"
+          });
+          return;
+        }
+      }
+    }
     const [fechaInicio, fechaFin] = this.formSprint.value.fecha_inicio_fin ?? [];
     const sprint: any = {
       nombre: this.formSprint.value.nombre,
       fecha_inicio: fechaInicio,
       fecha_fin: fechaFin,
       objetivo: this.formSprint.value.objetivo,
-      id_usuario: this.formSprint.value.id_usuario,
-      id_proyecto: this.idProyecto
+      id_usuario: this.formSprint.value.id_usuario
     }
-    this.sprintsService.create(sprint).subscribe({
-      next: () => {
-        this.sprintDialog = false;
-        this.obtenerListaSprints();
-        Swal.fire({
-          title: "Correcto!",
-          text: "La operación se ha sido completada.",
-          icon: "success"
-        });
-      },
-      error: (error) => console.error('Error al crear el sprint', error)
-    });
+    if (!this.editting) {
+      this.sprintsService.create({ ...sprint, id_proyecto: this.idProyecto }).subscribe({
+        next: () => {
+          this.sprintDialog = false;
+          this.obtenerListaSprints();
+          Swal.fire({
+            title: "Correcto!",
+            text: "La operación se ha sido completada.",
+            icon: "success"
+          });
+        },
+        error: (error) => console.error('Error al crear el sprint', error)
+      });
+    } else {
+      this.sprintsService.update(this.idSprint.value as any, sprint).subscribe({
+        next: () => {
+          this.sprintDialog = false;
+          this.obtenerListaSprints();
+          Swal.fire({
+            title: "Correcto!",
+            text: "La operación se ha sido completada.",
+            icon: "success"
+          });
+        },
+        error: (error) => console.error('Error al editar el sprint', error)
+      });
+    }
   }
 
   cerrarModalSprint() {
@@ -504,5 +576,14 @@ export class TableroTareasComponent implements OnInit {
       },
       error: (error) => console.error('Error al predecir prioridades de tareas', error)
     });
+  }
+
+  validarEstadoSprint(fechaInicio: string, fechaFin: string): number {
+    const fechaActual = new Date(new Date().toDateString());
+    if (fechaActual >= new Date(fechaInicio) && fechaActual <= new Date(fechaFin))
+      return 1;
+    if (fechaActual > new Date(fechaFin))
+      return 2;
+    return 3;
   }
 }

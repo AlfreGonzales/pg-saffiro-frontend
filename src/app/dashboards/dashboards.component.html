@@ -1,8 +1,83 @@
 <div class="grid">
-    <div class="col-12">
+    <div class="col-12 lg:col-6 xl:col-3">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Usuarios</span>
+                    <div class="text-900 font-medium text-xl">{{ infoRapida.usuarios }}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-blue-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                    <i class="pi pi-user text-blue-500 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 lg:col-6 xl:col-3">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Proyectos</span>
+                    <div class="text-900 font-medium text-xl">{{ infoRapida.proyectos }}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-orange-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                    <i class="pi pi-th-large text-orange-500 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 lg:col-6 xl:col-3">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Tareas agregadas en la última semana</span>
+                    <div class="text-900 font-medium text-xl">{{ infoRapida.tareas }}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-cyan-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                    <i class="pi pi-book text-cyan-500 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 lg:col-6 xl:col-3">
+        <div class="card mb-0">
+            <div class="flex justify-content-between mb-3">
+                <div>
+                    <span class="block text-500 font-medium mb-3">Actividad de accesos en la última semana</span>
+                    <div class="text-900 font-medium text-xl">{{ infoRapida.logsAcceso }}</div>
+                </div>
+                <div class="flex align-items-center justify-content-center bg-purple-100 border-round" [ngStyle]="{width: '2.5rem', height: '2.5rem'}">
+                    <i class="pi pi-history text-purple-500 text-xl"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12 lg:col-6">
         <div class="card">
-            <h4>Módulo de Dashboards</h4>
-            <p>dashboards works!</p>
+            <h5>Tareas por proyectos</h5>
+            <p-dropdown [options]="listaProyectosDropdown" [formControl]="idProyecto" optionLabel="name" optionValue="code" placeholder="Seleccione un proyecto" (onChange)="onDropdownChange()" />
+            <p-chart type="pie" [data]="dataPie"></p-chart>
+        </div>
+    </div>
+    <div class="col-12 lg:col-6">
+        <div class="card">
+            <p-treeTable [value]="avances">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Avance</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                    <tr [ttRow]="rowNode">
+                        <td>
+                            <p-treeTableToggler [rowNode]="rowNode" />
+                            {{ rowData.nombre }}
+                        </td>
+                        <td><p-progressBar [value]="rowData.avance" /></td>
+                    </tr>
+                </ng-template>
+            </p-treeTable>
         </div>
     </div>
 </div>

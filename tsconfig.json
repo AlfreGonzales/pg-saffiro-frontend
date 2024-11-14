@@ -25,10 +25,14 @@
     "paths": {
       "@shared/*": ["./src/app/shared/*"],
       "@auth/*": ["./src/app/auth/*"],
+      "@log-accesos/*": ["./src/app/log-accesos/*"],
+      "@reportes/*": ["./src/app/reportes/*"],
       "@roles/*": ["./src/app/roles/*"],
       "@usuarios/*": ["./src/app/usuarios/*"],
-      "@log-accesos/*": ["./src/app/log-accesos/*"],
-      "@proyectos/*": ["./src/app/proyectos/*"]
+      "@equipos/*": ["./src/app/equipos/*"],
+      "@proyectos/*": ["./src/app/proyectos/*"],
+      "@tareas/*": ["./src/app/tareas/*"],
+      "@empresas/*": ["./src/app/empresas/*"]
     }
   },
   "angularCompilerOptions": {

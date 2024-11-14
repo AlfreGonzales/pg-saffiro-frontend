@@ -8,6 +8,7 @@ import { Table } from 'primeng/table';
 import { CalendarModule } from 'primeng/calendar';
 import { EstadoProyecto } from '@proyectos/enums/estado-proyecto';
 import { EquiposService } from '../../equipos/equipos.service';
+import { EmpresasService } from '@empresas/empresas.service';
 
 @Component({
   selector: 'app-listado-proyectos',
@@ -33,23 +34,28 @@ export class ListadoProyectosComponent implements OnInit {
 
   listaEquiposDropdown!: any[];
 
+  listaEmpresasDropdown!: any[];
+
   formProyecto = this.fb.group({
     nombre: ['', [Validators.required, Validators.minLength(3)]],
     descripcion: ['', [Validators.required]],
     costo_estimado: ['', [Validators.required]],
     fecha_inicio_fin: ['', [Validators.required]],
-    id_equipo: ['', [Validators.required]]
+    id_equipo: ['', [Validators.required]],
+    id_empresa: [0, [Validators.required]]
   });
 
   constructor(
     private fb: FormBuilder,
     private proyectosService: ProyectosService,
-    private equiposService: EquiposService
+    private equiposService: EquiposService,
+    private empresasService: EmpresasService
   ) {}
 
   ngOnInit(): void {
     this.obtenerLista();
     this.obtenerListaEquipos();
+    this.obtenerListaEmpresas();
   }
 
   obtenerLista() {
@@ -66,6 +72,8 @@ export class ListadoProyectosComponent implements OnInit {
       { field: 'costo_estimado', header: 'Costo estimado' },
       { field: 'fecha_inicio', header: 'Fecha de inicio' },
       { field: 'fecha_fin', header: 'Fecha de finalización' },
+      { field: 'id_equipo', header: 'Equipo' },
+      { field: 'id_empresa', header: 'Empresa' },
       { field: 'estado', header: 'Estado' },
       { field: 'created_at', header: 'Fecha de registro' }
     ];
@@ -87,6 +95,22 @@ export class ListadoProyectosComponent implements OnInit {
     });
   }
 
+  obtenerListaEmpresas() {
+    this.empresasService.findAll().subscribe({
+      next: (data) => {
+        this.listaEmpresasDropdown = data
+        .filter(iEmpresa => iEmpresa.estado_logico)
+        .map(iEmpresa => {
+          return {
+            code: iEmpresa.id,
+            name: iEmpresa.nombre
+          };
+        });
+      },
+      error: (error) => console.error('Error al listar las empresas', error)
+    });
+  }
+
   abrirModalCrear() {
     this.formProyecto.reset();
     this.editting = false;
@@ -102,7 +126,8 @@ export class ListadoProyectosComponent implements OnInit {
       descripcion: proyecto.descripcion,
       costo_estimado: proyecto.costo_estimado.toString(),
       fecha_inicio_fin: fechaInicioFin,
-      id_equipo: this.listaEquiposDropdown.find((iEquipo) => iEquipo.code === proyecto.id_equipo)
+      id_equipo: this.listaEquiposDropdown.find((iEquipo) => iEquipo.code === proyecto.id_equipo),
+      id_empresa: proyecto.id_empresa
     });
     this.productDialog = true;
   }
@@ -128,7 +153,8 @@ export class ListadoProyectosComponent implements OnInit {
         costo_estimado: Number(this.formProyecto.value.costo_estimado),
         fecha_inicio: fechaInicio,
         fecha_fin: fechaFin,
-        id_equipo: id_equipo.code
+        id_equipo: id_equipo.code,
+        id_empresa: this.formProyecto.value.id_empresa
       };
       this.proyectosService.create(proyecto).subscribe({
         next: () => {
@@ -149,7 +175,8 @@ export class ListadoProyectosComponent implements OnInit {
         costo_estimado: Number(this.formProyecto.value.costo_estimado),
         fecha_inicio: fechaInicio,
         fecha_fin: fechaFin,
-        id_equipo: id_equipo.code
+        id_equipo: id_equipo.code,
+        id_empresa: this.formProyecto.value.id_empresa
       };
       this.proyectosService.update(this.idProyecto, proyecto).subscribe({
         next: () => {

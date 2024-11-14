@@ -7,5 +7,6 @@ export interface Proyecto {
     fecha_fin: Date;
     estado: string;
     id_equipo: number;
+    id_empresa: number;
     created_at: Date;
 }

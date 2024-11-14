@@ -27,6 +27,8 @@
                         <th pSortableColumn="costo_estimado">Costo estimado<p-sortIcon field="costo_estimado"></p-sortIcon></th>
                         <th pSortableColumn="fecha_inicio">Fecha de inicio<p-sortIcon field="fecha_inicio"></p-sortIcon></th>
                         <th pSortableColumn="fecha_fin">Fecha de finalización<p-sortIcon field="fecha_fin"></p-sortIcon></th>
+                        <th pSortableColumn="id_equipo">Equipo<p-sortIcon field="id_equipo"></p-sortIcon></th>
+                        <th pSortableColumn="id_empresa">Empresa<p-sortIcon field="id_empresa"></p-sortIcon></th>
                         <th pSortableColumn="estado">Estado<p-sortIcon field="estado"></p-sortIcon></th>
                         <th pSortableColumn="created_at">Fecha de registro<p-sortIcon field="created_at"></p-sortIcon></th>
                         <th></th>
@@ -48,6 +50,12 @@
                         </td>
                         <td>
                             {{ proyecto.fecha_fin | date:'dd/MM/yyyy' }}
+                        </td>
+                        <td>
+                            {{ proyecto.equipo.nombre }}
+                        </td>
+                        <td>
+                            {{ proyecto.empresa.nombre }}
                         </td>
                         <td>
                             <p-tag [rounded]="true" [value]="proyecto.estado.toUpperCase()"
@@ -75,10 +83,10 @@
                         <label for="nombre">Nombre</label>
                         <input type="text" pInputText formControlName="nombre" id="nombre" />
                         @if (formProyecto.get('nombre')?.hasError('required') && formProyecto.get('nombre')?.touched) {
-                        <small> El campo nombre es requerido </small>
+                        <small class="p-error"> El campo nombre es requerido </small>
                         }
                         @if (formProyecto.get('nombre')?.hasError('minlength') && formProyecto.get('nombre')?.touched) {
-                        <small> El campo nombre debe tener al menos 3 caracteres </small>
+                        <small class="p-error"> El campo nombre debe tener al menos 3 caracteres </small>
                         }
                     </div>
 
@@ -86,7 +94,7 @@
                         <label for="descripcion">Descripción</label>
                         <input type="text" pInputText formControlName="descripcion" id="descripcion" />
                         @if (formProyecto.get('descripcion')?.hasError('required') && formProyecto.get('descripcion')?.touched) {
-                        <small> El campo descripción es requerido </small>
+                        <small class="p-error"> El campo descripción es requerido </small>
                         }
                     </div>
 
@@ -94,12 +102,11 @@
                         <label for="costo_estimado">Costo estimado</label>
                         <p-inputNumber formControlName="costo_estimado"
                             mode="decimal"
-                            prefix="Bs. "
                             [useGrouping]="false"
                             [minFractionDigits]="2"
                             [maxFractionDigits]="2" inputId="costo_estimado" /> 
                         @if (formProyecto.get('costo_estimado')?.hasError('required') && formProyecto.get('costo_estimado')?.touched) {
-                        <small> El campo costo estimado es requerido </small>
+                        <small class="p-error"> El campo costo estimado es requerido </small>
                         }
                     </div>
 
@@ -111,7 +118,7 @@
                             [readonlyInput]="true"
                             [appendTo]="'body'" inputId="fecha_inicio_fin" />
                         @if (formProyecto.get('fecha_inicio_fin')?.hasError('required') && formProyecto.get('fecha_inicio_fin')?.touched) {
-                        <small> El campo fecha de inicio y fin es requerido </small>
+                        <small class="p-error"> El campo fecha de inicio y fin es requerido </small>
                         }
                     </div>
 
@@ -120,7 +127,16 @@
                         <p-dropdown formControlName="id_equipo" inputId="id_equipo" [options]="listaEquiposDropdown" optionLabel="name"
                             placeholder="Seleccione un equipo" [appendTo]="'body'" />
                         @if (formProyecto.get('id_equipo')?.hasError('required') && formProyecto.get('id_equipo')?.touched) {
-                        <small> El campo equipo de desarrollo es requerido </small>
+                        <small class="p-error"> El campo equipo de desarrollo es requerido </small>
+                        }
+                    </div>
+
+                    <div class="field">
+                        <label for="id_empresa">Empresa</label>
+                        <p-dropdown formControlName="id_empresa" inputId="id_empresa" [options]="listaEmpresasDropdown" optionLabel="name"
+                            optionValue="code" placeholder="Seleccione una empresa" [appendTo]="'body'" />
+                        @if (formProyecto.get('id_empresa')?.hasError('required') && formProyecto.get('id_empresa')?.touched) {
+                        <small class="p-error"> El campo empresa es requerido </small>
                         }
                     </div>
 

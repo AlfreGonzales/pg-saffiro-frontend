@@ -19,3 +19,12 @@ export const ColoresEstadoTarea = new Map<string, string[]>([
     [EstadoTarea.POSTERGADA, ['var(--gray-100)', 'var(--gray-400)']],
     [EstadoTarea.CANCELADA, ['var(--red-100)', 'var(--red-400)']]
 ]);
+
+export const NombreColumna = new Map<number, string>([
+    [0, 'Nuevas'],
+    [1, 'Aprobadas'],
+    [2, 'En curso'],
+    [3, 'Calidad'],
+    [4, 'Certificación'],
+    [5, 'Acabadas']
+]);
