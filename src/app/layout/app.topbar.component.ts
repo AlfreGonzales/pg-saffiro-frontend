@@ -49,6 +49,11 @@ export class AppTopBarComponent implements OnInit {
     ngOnInit(): void {
         this.items = [
             {
+                label: 'Perfil',
+                icon: 'pi pi-id-card',
+                command: () => this.router.navigate(['perfil'])
+            },
+            {
                 label: 'Cerrar sesión',
                 icon: 'pi pi-sign-out',
                 command: () => this.cerrarSesion()

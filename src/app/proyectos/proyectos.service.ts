@@ -16,19 +16,15 @@ export class ProyectosService {
     return this.http.post(this.baseUrl, proyecto);
   }
 
-  findAll() {
-    return this.http.get<Proyecto[]>(this.baseUrl);
+  findAll(idUsuario: number) {
+    return this.http.get<Proyecto[]>(`${this.baseUrl}todos/${idUsuario}`);
   }
 
   findOne(id: number) {
-    return this.http.get<Proyecto>(`${this.baseUrl}${id}`);
+    return this.http.get<Proyecto>(`${this.baseUrl}unico/${id}`);
   }
 
   update(id: number, proyecto: Proyecto) {
     return this.http.patch(`${this.baseUrl}${id}`, proyecto);
   }
-
-  /* remove(id: number) {
-    return this.http.delete(`${this.baseUrl}${id}`);
-  } */
 }

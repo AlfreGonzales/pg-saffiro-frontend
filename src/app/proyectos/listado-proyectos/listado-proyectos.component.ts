@@ -9,6 +9,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { EstadoProyecto } from '@proyectos/enums/estado-proyecto';
 import { EquiposService } from '../../equipos/equipos.service';
 import { EmpresasService } from '@empresas/empresas.service';
+import { LocalStorageService } from '@shared/services/local-storage.service';
 
 @Component({
   selector: 'app-listado-proyectos',
@@ -49,7 +50,8 @@ export class ListadoProyectosComponent implements OnInit {
     private fb: FormBuilder,
     private proyectosService: ProyectosService,
     private equiposService: EquiposService,
-    private empresasService: EmpresasService
+    private empresasService: EmpresasService,
+    private localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +61,7 @@ export class ListadoProyectosComponent implements OnInit {
   }
 
   obtenerLista() {
-    this.proyectosService.findAll().subscribe({
+    this.proyectosService.findAll(this.localStorageService.getUsuario().id).subscribe({
       next: (data) => {
         this.listaProyectos = data;
       },

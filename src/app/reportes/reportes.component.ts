@@ -59,7 +59,7 @@ export class ReportesComponent implements OnInit{
       error: (error) => console.error('Error al listar los usuarios', error)
     });
 
-    this.proyectosService.findAll().subscribe({
+    this.proyectosService.findAll(0).subscribe({
       next: (data) => {
         this.listaProyectosDropdown = data.map(iProyecto => (
           {

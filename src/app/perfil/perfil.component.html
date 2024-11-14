@@ -1,0 +1,111 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-fieldset legend="Datos personales" class="p-fluid">
+                <form [formGroup]="formUsuario" (ngSubmit)="editProfile()">
+            
+                    <div class="field">
+                        <label for="ci">Cédula de identidad</label>
+                        <input formControlName="ci" type="text" pInputText id="ci" />
+                        @if (formUsuario.get('ci')?.hasError('required') && formUsuario.get('ci')?.touched) {
+                        <small class="p-error"> El campo cédula de identidad es requerido </small>
+                        }
+                        @if (formUsuario.get('ci')?.hasError('minlength') && formUsuario.get('ci')?.touched) {
+                        <small class="p-error"> El campo cédula de identidad debe tener al menos 7 caracteres </small>
+                        }
+                        @if (formUsuario.get('ci')?.hasError('maxlength') && formUsuario.get('ci')?.touched) {
+                            <small class="p-error"> El campo cédula de identidad debe tener máximo 8 caracteres </small>
+                        }
+                    </div>
+
+                    <div class="field">
+                        <label for="nombres">Nombres</label>
+                        <input formControlName="nombres" type="text" pInputText id="nombres" />
+                        @if (formUsuario.get('nombres')?.hasError('required') && formUsuario.get('nombres')?.touched) {
+                        <small class="p-error"> El campo nombres es requerido </small>
+                        }
+                        @if (formUsuario.get('nombres')?.hasError('minlength') && formUsuario.get('nombres')?.touched) {
+                        <small class="p-error"> El campo nombres debe tener al menos 3 caracteres </small>
+                        }
+                    </div>
+
+                    <div class="field">
+                        <label for="apellidos">Apellidos</label>
+                        <input formControlName="apellidos" type="text" pInputText id="apellidos" />
+                        @if (formUsuario.get('apellidos')?.hasError('required') && formUsuario.get('apellidos')?.touched) {
+                        <small class="p-error"> El campo apellidos es requerido </small>
+                        }
+                        @if (formUsuario.get('apellidos')?.hasError('minlength') && formUsuario.get('apellidos')?.touched) {
+                        <small class="p-error"> El campo apellidos debe tener al menos 3 caracteres </small>
+                        }
+                    </div>
+
+                    <div class="field">
+                        <label for="cargo">Cargo</label>
+                        <input formControlName="cargo" type="text" pInputText id="cargo" />
+                    </div>
+
+                    <div class="field">
+                        <label for="telefono">Teléfono</label>
+                        <input formControlName="telefono" type="text" pInputText id="telefono" />
+                    </div>
+
+                    <div class="field">
+                        <label for="email">Email</label>
+                        <input formControlName="email" type="text" pInputText id="email" />
+                    </div>
+
+                    <div class="field">
+                        <label for="rol">Rol</label>
+                        <input formControlName="rol" type="text" pInputText id="rol" />
+                    </div>
+
+                    <button pButton pRipple label="Guardar cambios" icon="pi pi-check" class="p-button-text" type="submit"></button>
+
+                </form>
+            </p-fieldset>
+            <p-fieldset legend="Cambiar contraseña" class="p-fluid">
+                <form [formGroup]="formPassword" (ngSubmit)="changePassword()">
+
+                    <div class="field">
+                        <label for="currentPassword">Contraseña actual</label>
+                        <p-password formControlName="currentPassword" [feedback]="false" [toggleMask]="true" inputId="currentPassword" />
+                        @if (formPassword.get('currentPassword')?.hasError('required') && formPassword.get('currentPassword')?.touched) {
+                            <small class="p-error"> El campo constraseña actual nueva es requerido </small>
+                        }
+                    </div>
+
+                    <div class="field">
+                        <label for="newPassword">Contraseña nueva</label>
+                        <p-password formControlName="newPassword"
+                            promptLabel="Elige una contraseña"
+                            weakLabel="Muy simple"
+                            mediumLabel="Moderada"
+                            strongLabel="Segura"
+                            [toggleMask]="true" inputId="newPassword" />
+                        @if (formPassword.get('newPassword')?.hasError('required') && formPassword.get('newPassword')?.touched) {
+                            <small class="p-error"> El campo constraseña nueva es requerido </small>
+                        }
+                        @if (formPassword.get('newPassword')?.hasError('minlength') && formPassword.get('newPassword')?.touched) {
+                            <small class="p-error"> El campo constraseña nueva debe tener al menos 8 caracteres </small>
+                        }
+                    </div>
+
+                    <div class="field">
+                        <label for="confirmPassword">Confirmar contraseña nueva</label>
+                        <p-password formControlName="confirmPassword" [feedback]="false" [toggleMask]="true" inputId="confirmPassword" />
+                        @if (formPassword.get('confirmPassword')?.hasError('required') && formPassword.get('confirmPassword')?.touched) {
+                            <small class="p-error"> El campo confirmar constraseña nueva es requerido </small>
+                        }
+                        @if (formPassword.get('confirmPassword')?.hasError('notEqual') && formPassword.get('confirmPassword')?.touched) {
+                            <small class="p-error"> Las constraseñas no coinciden </small>
+                        }
+                    </div>
+
+                    <button pButton pRipple label="Cambiar constraseña" icon="pi pi-check" class="p-button-text" type="submit"></button>
+
+                </form>
+            </p-fieldset>
+        </div>
+    </div>
+</div>

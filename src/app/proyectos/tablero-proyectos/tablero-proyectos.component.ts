@@ -82,7 +82,7 @@ export class TableroProyectosComponent implements OnInit {
   }
 
   obtenerLista() {
-    this.proyectosService.findAll().subscribe({
+    this.proyectosService.findAll(this.localStorageService.getUsuario().id).subscribe({
       next: (data) => {
         this.obtenerListaEstados(data);
       },

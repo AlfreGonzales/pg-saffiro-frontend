@@ -15,6 +15,7 @@ import { ListadoTareasComponent } from './tareas/listado-tareas/listado-tareas.c
 import { EquiposComponent } from './equipos/equipos.component';
 import { EmpresasComponent } from './empresas/empresas.component';
 import { ReportesComponent } from './reportes/reportes.component';
+import { PerfilComponent } from './perfil/perfil.component';
 
 export const routes: Routes = [
   {
@@ -27,6 +28,12 @@ export const routes: Routes = [
     component: AppLayoutComponent,
     resolve: { authInfo: authResolver },
     children: [
+      {
+        path: 'perfil',
+        component: PerfilComponent,
+        title: 'Perfil',
+        canActivate: [loginGuard]
+      },
       {
         path: '',
         component: DashboardsComponent,
