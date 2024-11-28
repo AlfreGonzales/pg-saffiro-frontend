@@ -26,6 +26,7 @@ import Swal, { SweetAlertOptions } from 'sweetalert2';
 import { Rol } from './models/rol';
 import { RolesService } from './roles.service';
 import { Modulos } from '../shared/enums/modulos';
+import { PgTablaComponent } from '@shared/components/pg-tabla/pg-tabla.component';
 
 interface Modulo {
   campo: string;
@@ -55,7 +56,8 @@ interface Modulo {
     SweetAlert2Module,
     PasswordModule,
     MultiSelectModule,
-    ChipModule
+    ChipModule,
+    PgTablaComponent
   ],
   templateUrl: './roles.component.html',
   styleUrl: './roles.component.scss'
@@ -75,6 +77,10 @@ export class RolesComponent implements OnInit {
 
 
   rowsPerPageOptions = [5, 10, 20];
+
+  tableConfig: any = {};
+
+  loading: boolean = false;
 
   alertaBorrar: SweetAlertOptions = {
     title: "Desea inactivar el rol?",
@@ -105,16 +111,39 @@ export class RolesComponent implements OnInit {
     this.rolesService.findAll().subscribe({
       next: (data) => {
         this.listaRoles = data;
+        this.configurarTabla();
+        this.loading = true;
       },
       error: (error) => console.error('Error al listar los roles', error),
     });
+  }
 
+  configurarTabla() {
     this.cols = [
       { field: 'nombre', header: 'Nombre' },
-      { field: 'modulos', header: 'Módulos' },
-      { field: 'created_at', header: 'Fecha de registro' },
-      { field: 'estado_logico', header: 'Estado' },
+      { field: 'modulos', header: 'Módulos', type: 'chip' },
+      { field: 'created_at', header: 'Fecha de registro', type: 'date' },
+      { field: 'estado_logico', header: 'Estado', type: 'state' },
+      { header: '', sort: false, type: 'actions',
+        actions: [
+          {
+            type: 'edit', click: (item: any) => this.editRol(item), visible: 'estado_logico'
+          },
+          {
+            type: 'inactivate', click: (item: Rol) => this.inactivar(item), visible: 'estado_logico'
+          },
+          {
+            type: 'activate', click: (item: Rol) => this.inactivar(item), visible: 'estado_logico'
+          }
+        ]
+      }
     ];
+    this.tableConfig = {
+      title: 'Lista de empresas',
+      cols: this.cols,
+      data: this.listaRoles,
+      globalFilterFields: ['nombre', 'modulos']
+    };
   }
 
   crearUsuario(): void {

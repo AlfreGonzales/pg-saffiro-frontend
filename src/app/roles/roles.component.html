@@ -10,50 +10,9 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="listaRoles" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['nombre', 'modulos']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" selectionMode="multiple" [rowHover]="true" dataKey="id">
-                <ng-template pTemplate="caption">
-                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                        <h5 class="m-0">Lista de roles</h5>
-                        <span class="block mt-2 md:mt-0 p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."  class="w-full sm:w-auto"/>
-                        </span>
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th pSortableColumn="nombre">Nombre<p-sortIcon field="nombre"></p-sortIcon></th>
-                        <th pSortableColumn="modulos">Módulos<p-sortIcon field="modulos"></p-sortIcon></th>
-                        <th pSortableColumn="created_at">Fecha de registro<p-sortIcon field="created_at"></p-sortIcon></th>
-                        <th pSortableColumn="estado_logico">Estado<p-sortIcon field="estado_logico"></p-sortIcon></th>
-                        <th></th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-rol>
-                    <tr>
-                        <td>
-                            {{ rol.nombre }}
-                        </td>
-                        <td>
-                            @for (item of rol.modulos.split(', '); track item) {
-                                <p-chip [label]="item" class="mr-2" />
-                            }
-                        </td>
-                        <td>
-                            {{ rol.created_at | date:'dd/MM/yyyy' }}
-                        </td>
-                        <td>
-                            <p-tag [rounded]="true" [value]="rol.estado_logico ? 'ACTIVO' : 'INACTIVO'" [severity]="rol.estado_logico ? 'success' : 'danger'" />
-                        </td>
-                        <td>
-                            <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="mr-2" size="large" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="editRol(rol)"></button>
-                                <button pButton pRipple icon="pi pi-trash" size="large" [rounded]="true" [text]="true" [raised]="true" severity="danger" [swal]="alertaBorrar" (confirm)="inactivar(rol)"></button>
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
+            @if (loading) {
+                <app-pg-tabla [title]="tableConfig.title" [data]="tableConfig.data" [cols]="tableConfig.cols" [globalFilterFields]="tableConfig.globalFilterFields"></app-pg-tabla>
+            }
         </div>
 
         <p-dialog [(visible)]="productDialog" [style]="{width: '500px'}" header="Nuevo rol" [modal]="true" class="p-fluid">

@@ -10,68 +10,9 @@
                 </ng-template>
             </p-toolbar>
 
-            <p-table #dt [value]="listaUsuarios" [columns]="cols" responsiveLayout="scroll" [rows]="10" [globalFilterFields]="['ci', 'nombres','apellidos','cargo','telefono','email', 'rol.nombre']" [paginator]="true" [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" [(selection)]="selectedProducts" selectionMode="multiple" [rowHover]="true" dataKey="id">
-                <ng-template pTemplate="caption">
-                    <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-                        <h5 class="m-0">Lista de usuarios</h5>
-                        <span class="block mt-2 md:mt-0 p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Buscar..."  class="w-full sm:w-auto"/>
-                        </span>
-                    </div>
-                </ng-template>
-                <ng-template pTemplate="header">
-                    <tr>
-                        <th pSortableColumn="ci">Cédula de identidad<p-sortIcon field="ci"></p-sortIcon></th>
-                        <th pSortableColumn="nombres">Nombres<p-sortIcon field="nombres"></p-sortIcon></th>
-                        <th pSortableColumn="apellidos">Apellidos<p-sortIcon field="apellidos"></p-sortIcon></th>
-                        <th pSortableColumn="cargo">Cargo<p-sortIcon field="cargo"></p-sortIcon></th>
-                        <th pSortableColumn="telefono">Teléfono<p-sortIcon field="telefono"></p-sortIcon></th>
-                        <th pSortableColumn="email">Email<p-sortIcon field="email"></p-sortIcon></th>
-                        <th pSortableColumn="id_rol">Rol<p-sortIcon field="id_rol"></p-sortIcon></th>
-                        <th pSortableColumn="created_at">Fecha de registro<p-sortIcon field="created_at"></p-sortIcon></th>
-                        <th pSortableColumn="estado_logico">Estado<p-sortIcon field="estado_logico"></p-sortIcon></th>
-                        <th></th>
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-usuario>
-                    <tr>
-                        <td>
-                            {{ usuario.ci }}
-                        </td>
-                        <td>
-                            {{ usuario.nombres }}
-                        </td>
-                        <td>
-                            {{ usuario.apellidos }}
-                        </td>
-                        <td>
-                            {{ usuario.cargo }}
-                        </td>
-                        <td>
-                            {{ usuario.telefono }}
-                        </td>
-                        <td>
-                            {{ usuario.email }}
-                        </td>
-                        <td>
-                            {{ usuario.rol.nombre }}
-                        </td>
-                        <td>
-                            {{ usuario.created_at | date:'dd/MM/yyyy' }}
-                        </td>
-                        <td>
-                            <p-tag [rounded]="true" [value]="usuario.estado_logico ? 'ACTIVO' : 'INACTIVO'" [severity]="usuario.estado_logico ? 'success' : 'danger'" />
-                        </td>
-                        <td>
-                            <div class="flex">
-                                <button pButton pRipple icon="pi pi-pencil" class="mr-2" size="large" [rounded]="true" [text]="true" [raised]="true" severity="success" (click)="editUsuario(usuario)"></button>
-                                <button pButton pRipple icon="pi pi-trash" size="large" [rounded]="true" [text]="true" [raised]="true" severity="danger" [swal]="alertaBorrar" (confirm)="inactivar(usuario)"></button>
-                            </div>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
+            @if (loading) {
+                <app-pg-tabla [title]="tableConfig.title" [data]="tableConfig.data" [cols]="tableConfig.cols" [globalFilterFields]="tableConfig.globalFilterFields"></app-pg-tabla>
+            }
         </div>
 
         <p-dialog [(visible)]="productDialog" [style]="{width: '500px'}" header="Nuevo usuario" [modal]="true" class="p-fluid">

@@ -25,6 +25,7 @@ import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import Swal, { SweetAlertOptions } from 'sweetalert2';
 import { Rol } from '../roles/models/rol';
 import { RolesService } from '../roles/roles.service';
+import { PgTablaComponent } from '@shared/components/pg-tabla/pg-tabla.component';
 
 @Component({
   selector: 'app-usuarios',
@@ -48,7 +49,8 @@ import { RolesService } from '../roles/roles.service';
     DialogModule,
     TagModule,
     SweetAlert2Module,
-    PasswordModule
+    PasswordModule,
+    PgTablaComponent
   ],
   templateUrl: './usuarios.component.html',
   styleUrl: './usuarios.component.scss'
@@ -81,6 +83,10 @@ export class UsuariosComponent implements OnInit {
   statuses: any[] = [];
 
   rowsPerPageOptions = [5, 10, 20];
+
+  tableConfig: any = {};
+
+  loading: boolean = false;
 
   alertaBorrar: SweetAlertOptions = {
     title: "Desea inactivar al usuario?",
@@ -120,27 +126,50 @@ export class UsuariosComponent implements OnInit {
     this.usuariosService.findAll().subscribe({
       next: (data) => {
         this.listaUsuarios = data;
+        this.configurarTabla();
+        this.loading = true;
       },
       error: (error) => console.error('Error al listar los usuarios', error),
     });
-
-    this.cols = [
-      { field: 'ci', header: 'Cédula de identidad' },
-      { field: 'nombres', header: 'Nombres' },
-      { field: 'apellidos', header: 'Apellidos' },
-      { field: 'cargo', header: 'Cargo' },
-      { field: 'Telefono', header: 'Teléfono' },
-      { field: 'email', header: 'Email' },
-      { field: 'id_rol', header: 'Rol' },
-      { field: 'created_at', header: 'Fecha de registro' },
-      { field: 'estado_logico', header: 'Estado' },
-    ];
 
     this.statuses = [
       { label: 'INSTOCK', value: 'instock' },
       { label: 'LOWSTOCK', value: 'lowstock' },
       { label: 'OUTOFSTOCK', value: 'outofstock' },
     ];
+  }
+
+  configurarTabla() {
+    this.cols = [
+      { field: 'ci', header: 'Cédula de identidad' },
+      { field: 'nombres', header: 'Nombres' },
+      { field: 'apellidos', header: 'Apellidos' },
+      { field: 'cargo', header: 'Cargo' },
+      { field: 'telefono', header: 'Teléfono' },
+      { field: 'email', header: 'Email' },
+      { field: 'rol.nombre', header: 'Rol' },
+      { field: 'created_at', header: 'Fecha de registro', type: 'date' },
+      { field: 'estado_logico', header: 'Estado', type: 'state' },
+      { header: '', sort: false, type: 'actions',
+        actions: [
+          {
+            type: 'edit', click: (item: any) => this.editUsuario(item), visible: 'estado_logico'
+          },
+          {
+            type: 'inactivate', click: (item: Usuario) => this.inactivar(item), visible: 'estado_logico'
+          },
+          {
+            type: 'activate', click: (item: Usuario) => this.inactivar(item), visible: 'estado_logico'
+          }
+        ]
+      }
+    ];
+    this.tableConfig = {
+      title: 'Lista de empresas',
+      cols: this.cols,
+      data: this.listaUsuarios,
+      globalFilterFields: ['ci', 'nombres','apellidos','cargo','telefono','email', 'rol.nombre']
+    };
   }
 
   obtenerListaRoles() {

@@ -234,12 +234,13 @@ export class TableroTareasComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       if (event.previousContainer.id.split('-').at(-1) === '0') {
+        console.log(event.item.data.tarea)
         this.errores = [];
-        if (!event.item.data.tarea.tiempo_estimado)
+        if (event.item.data.tarea.tiempo_estimado === null)
           this.errores.push("Tiempo estimado");
-        if (!event.item.data.tarea.peso)
+        if (event.item.data.tarea.peso === null)
           this.errores.push("Peso");
-        if (!event.item.data.tarea.bugs_permitidos)
+        if (event.item.data.tarea.bugs_permitidos === null)
           this.errores.push("Bugs permitidos");
         if (this.errores.length > 0) {
           Swal.fire({
