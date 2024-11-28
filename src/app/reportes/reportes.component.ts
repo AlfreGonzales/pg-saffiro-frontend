@@ -144,7 +144,7 @@ export class ReportesComponent implements OnInit{
       cols: this.cols,
       data: this.listaReporte,
       globalFilterFields: ['tarea.nombre', 'tarea.proyecto.nombre', 'sprint.nombre', 'tarea.proyecto.equipo.nombre', 'tarea.proyecto.empresa.nombre'],
-      paginator: false
+      //paginator: false
     };
   }
 }
