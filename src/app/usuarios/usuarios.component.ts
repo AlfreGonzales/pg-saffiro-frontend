@@ -165,7 +165,7 @@ export class UsuariosComponent implements OnInit {
       }
     ];
     this.tableConfig = {
-      title: 'Lista de empresas',
+      title: 'Lista de usuarios',
       cols: this.cols,
       data: this.listaUsuarios,
       globalFilterFields: ['ci', 'nombres','apellidos','cargo','telefono','email', 'rol.nombre']

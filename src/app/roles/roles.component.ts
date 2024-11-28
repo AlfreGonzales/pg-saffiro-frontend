@@ -139,7 +139,7 @@ export class RolesComponent implements OnInit {
       }
     ];
     this.tableConfig = {
-      title: 'Lista de empresas',
+      title: 'Lista de roles',
       cols: this.cols,
       data: this.listaRoles,
       globalFilterFields: ['nombre', 'modulos']
