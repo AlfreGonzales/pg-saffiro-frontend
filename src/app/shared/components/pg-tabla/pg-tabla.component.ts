@@ -8,7 +8,8 @@ import { RippleModule } from 'primeng/ripple';
 import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { SweetAlertOptions } from 'sweetalert2';
-import * as jsPDF from 'jspdf';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 
 @Component({
@@ -53,7 +54,7 @@ export class PgTablaComponent {
 
   //TEMP
   generarPDF() {
-    const data = document.getElementById('content');
+    /* const data = document.getElementById('content');
 
     html2canvas(data!).then(canvas => {
         const imgWidth = 297;
@@ -63,6 +64,34 @@ export class PgTablaComponent {
         const position = 0;
         pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
         pdf.save('reporte-tabla.pdf');
-    });
+    }); */
+
+		const doc = new jsPDF('l', 'mm', 'a4');
+
+    doc.addImage('assets/images/logo.png', 'PNG', 10, 10, 20, 20);
+		doc.setFontSize(25);
+		doc.text('PG SAFFIRO', 30, 25);
+		doc.setFontSize(15);
+		doc.text(
+			'Reporte en PFD de la tabla',
+			10,
+			40,
+		);
+    doc.text(
+			'Fecha: ' + new Date().toLocaleString(),
+			80,
+			40,
+		);
+    const cols = this.cols.filter(col => col.field);
+		const headers = [cols.map((col) => col.header)];
+		const data = this.data.map((row) => cols.map((col) => this.getNestedValue(row, col.field)));
+
+		autoTable(doc, {
+			head: headers,
+			body: data,
+			startY: 50,
+		});
+
+		doc.save('table.pdf');
   }
 }

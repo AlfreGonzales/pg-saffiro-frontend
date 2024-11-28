@@ -1,7 +1,8 @@
 <p-table #dt [value]="data" [columns]="cols" responsiveLayout="scroll" [rows]="10"
     [globalFilterFields]="globalFilterFields" [paginator]="paginator" [rowsPerPageOptions]="[10,20,30]"
     [showCurrentPageReport]="true"
-    currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros" [rowHover]="true" dataKey="id" id="content">
+    currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} registros"
+    [rowHover]="true" dataKey="id" [csvSeparator]="';'" id="content">
     <ng-template pTemplate="caption">
         <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 class="m-0">{{ title }}</h5>

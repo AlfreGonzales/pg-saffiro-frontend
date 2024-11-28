@@ -308,7 +308,7 @@ export class TableroTareasComponent implements OnInit {
         label: 'Cancelar tarea',
         icon: 'pi pi-times',
         command: async () => {
-          this.cambiaEstado(this.estado.CANCELADA, tarea);
+          this.cambiaEstadoCancelada(tarea);
         },
         visible: this.tareasNuevas.includes(tarea)
       }
@@ -333,6 +333,23 @@ export class TableroTareasComponent implements OnInit {
           });
         },
         error: (error) => console.error('Error al postergar/cancelar la tarea', error)
+      });
+    }
+  }
+
+  async cambiaEstadoCancelada(tarea: Tarea) {
+    const resultado = await Swal.fire(this.alertaConfirmacion);
+    if (resultado.isConfirmed) {
+      this.tareasService.updateCancel(tarea.id, tarea.id_tarea).subscribe({
+        next: () => {
+          this.tareasNuevas = this.tareasNuevas.filter(item => item.id !== tarea.id);
+          Swal.fire({
+            title: "Correcto!",
+            text: "La operación se ha realizado correctamente.\nSe hizo una copia de la tarea en el siguiente sprint.",
+            icon: "success"
+          });
+        },
+        error: (error) => console.error('Error al cancelar la tarea', error)
       });
     }
   }

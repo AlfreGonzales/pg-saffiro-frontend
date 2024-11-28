@@ -2,29 +2,48 @@
     <div class="col-12">
         <div class="card px-6 py-6">
             <p-toolbar styleClass="mb-4">
-                <ng-template pTemplate="left">
+                
                     <form [formGroup]="formFiltros" (ngSubmit)="generarReporte()">
-                        <p-dropdown formControlName="idUsuario" inputId="idUsuario" [options]="listaUsuariosDropdown" optionLabel="name"
-                            optionValue="code" placeholder="Seleccione un usuario" [showClear]="true" [appendTo]="'body'" class="mr-2" />
+                        <div class="formgrid grid">
 
-                        <p-dropdown formControlName="idProyecto" inputId="idProyecto" [options]="listaProyectosDropdown" optionLabel="name"
-                            optionValue="code" placeholder="Seleccione un proyecto" [showClear]="true" [appendTo]="'body'" class="mr-2" (onChange)="onDropdownChange()" />
+                            <div class="field col">
+                                <label for="idUsuario">Usuario</label>
+                                <p-dropdown formControlName="idUsuario" inputId="idUsuario" [options]="listaUsuariosDropdown" optionLabel="name"
+                                optionValue="code" placeholder="Seleccione un usuario" [showClear]="true" [appendTo]="'body'" class="block w-full" />
+                            </div>
 
-                        <p-dropdown formControlName="idSprint" inputId="idUsuario" [options]="listaSprintsDropdown" optionLabel="name"
-                            optionValue="code" placeholder="Seleccione un sprint" [showClear]="true" [appendTo]="'body'" class="mr-2" />
+                            <div class="field col">
+                                <label for="idProyecto">Proyecto</label>
+                                <p-dropdown formControlName="idProyecto" inputId="idProyecto" [options]="listaProyectosDropdown" optionLabel="name"
+                                optionValue="code" placeholder="Seleccione un proyecto" [showClear]="true" [appendTo]="'body'" (onChange)="onDropdownChange()" class="block w-full" />
+                            </div>
 
-                        <p-calendar formControlName="fecha_inicio_fin"
-                            selectionMode="range"
-                            dateFormat="dd/mm/yy"
-                            [readonlyInput]="true"
-                            placeholder="Rango de fechas"
-                            [appendTo]="'body'" inputId="fecha_inicio_fin" class="mr-2" />
-                        @if (formFiltros.get('fecha_inicio_fin')?.hasError('required') && formFiltros.get('fecha_inicio_fin')?.touched) {
-                            <small class="p-error"> El campo fecha de inicio y fin es requerido </small>
-                        }
-                        <button pButton pRipple label="Generar" icon="pi pi-check" class="p-button-text" type="submit"></button>
+                            <div class="field col">
+                                <label for="idSprint">Sprint</label>
+                                <p-dropdown formControlName="idSprint" inputId="idSprint" [options]="listaSprintsDropdown" optionLabel="name"
+                                optionValue="code" placeholder="Seleccione un sprint" [showClear]="true" [appendTo]="'body'" class="block w-full" />
+                            </div>
+
+                            <div class="field col">
+                                <label for="fecha_inicio_fin">Rango de fechas</label>
+                                <p-calendar formControlName="fecha_inicio_fin"
+                                selectionMode="range"
+                                dateFormat="dd/mm/yy"
+                                [readonlyInput]="true"
+                                placeholder="Rango de fechas"
+                                [appendTo]="'body'" inputId="fecha_inicio_fin" class="block w-full" />
+                            @if (formFiltros.get('fecha_inicio_fin')?.hasError('required') && formFiltros.get('fecha_inicio_fin')?.touched) {
+                                <small class="p-error"> El campo fecha de inicio y fin es requerido </small>
+                            }
+                            </div>
+
+                            <div class="field flex">
+                                <button pButton pRipple label="Generar" icon="pi pi-check" class="p-button-text flex align-items-center" type="submit"></button>
+                            </div>
+
+                        </div>
                     </form>
-                </ng-template>
+                
             </p-toolbar>
             @if (loading) {
                 <app-pg-tabla [title]="tableConfig.title" [data]="tableConfig.data" [cols]="tableConfig.cols" [globalFilterFields]="tableConfig.globalFilterFields" [paginator]="tableConfig.paginator"></app-pg-tabla>

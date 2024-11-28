@@ -24,6 +24,10 @@ export class TareasService {
     return this.http.patch(`${this.baseUrl}${idSprintTarea}/${idTarea}`, tarea);
   }
 
+  updateCancel(idSprintTarea: number, idTarea: number) {
+    return this.http.put(`${this.baseUrl}${idSprintTarea}/${idTarea}`, null);
+  }
+
   predecir(tareas: any) {
     return this.http.post(`http://localhost:5000/predecir`, tareas);
   }
