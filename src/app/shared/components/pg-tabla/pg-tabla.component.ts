@@ -92,6 +92,6 @@ export class PgTablaComponent {
 			startY: 50,
 		});
 
-		doc.save('table.pdf');
+		doc.save('datos-tabla.pdf');
   }
 }
