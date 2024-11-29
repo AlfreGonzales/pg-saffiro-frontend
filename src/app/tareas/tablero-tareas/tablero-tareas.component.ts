@@ -19,11 +19,12 @@ import { CalendarModule } from 'primeng/calendar';
 import { forkJoin } from 'rxjs';
 import { CardTareaComponent } from '../componentes/card-tarea/card-tarea.component';
 import { Sprint } from '@tareas/interfaces/sprint';
+import { SliderModule } from 'primeng/slider';
 
 @Component({
   selector: 'app-tablero-tareas',
   standalone: true,
-  imports: [...sharedImports, CardTareaComponent, CdkDropList, CdkDropListGroup, ContextMenuModule, EditorModule, MessagesModule, CalendarModule],
+  imports: [...sharedImports, CardTareaComponent, CdkDropList, CdkDropListGroup, ContextMenuModule, EditorModule, MessagesModule, CalendarModule, SliderModule],
   templateUrl: './tablero-tareas.component.html',
   styleUrl: './tablero-tareas.component.scss',
   encapsulation: ViewEncapsulation.None
@@ -66,7 +67,7 @@ export class TableroTareasComponent implements OnInit {
     descripcion: ['', [Validators.required]],
     tipo: ['', [Validators.required]],
     tiempo_estimado: [''],
-    peso: [''],
+    peso: [{ value: '', disabled: true }],
     bugs_permitidos: [''],
     id_tarea: [''],
     id_usuario_dev: [''],
@@ -114,6 +115,8 @@ export class TableroTareasComponent implements OnInit {
   idTareaNoti!: any;
 
   errores: any[] = [];
+
+  valor = 0;
 
   constructor(
     private tareasService: TareasService,
@@ -234,7 +237,6 @@ export class TableroTareasComponent implements OnInit {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
     } else {
       if (event.previousContainer.id.split('-').at(-1) === '0') {
-        console.log(event.item.data.tarea)
         this.errores = [];
         if (event.item.data.tarea.tiempo_estimado === null)
           this.errores.push("Tiempo estimado");
@@ -357,6 +359,7 @@ export class TableroTareasComponent implements OnInit {
 
   abrirModalCrear() {
     this.formTarea.reset();
+    this.valor = 0;
     this.editting = false;
     this.tareaDialog = true;
   }
@@ -382,9 +385,12 @@ export class TableroTareasComponent implements OnInit {
         id_usuario_dev: this.listaUsuariosDropdown.find((usuario) => usuario.code === this.tareaActual.id_usuario_dev),
         id_usuario_qa: this.listaUsuariosDropdown.find((usuario) => usuario.code === this.tareaActual.id_usuario_qa)
       });
+      this.valor = this.tareaActual.tarea.peso as any;
     }
-    else
+    else {
       this.formTarea.reset();
+      this.valor = 0;
+    }
   }
 
   crearTarea() {
@@ -403,7 +409,7 @@ export class TableroTareasComponent implements OnInit {
           descripcion: this.formTarea.value.descripcion,
           tipo: tipo.code,
           tiempo_estimado: this.formTarea.value.tiempo_estimado,
-          peso: this.formTarea.value.peso,
+          peso: this.formTarea.get('peso')?.value,
           bugs_permitidos: this.formTarea.value.bugs_permitidos,
           id_tarea: tareaDep?.code || null,
           id_proyecto: this.idProyecto
@@ -433,7 +439,7 @@ export class TableroTareasComponent implements OnInit {
           descripcion: this.formTarea.value.descripcion,
           tipo: tipo.code,
           tiempo_estimado: this.formTarea.value.tiempo_estimado,
-          peso: this.formTarea.value.peso,
+          peso: this.formTarea.get('peso')?.value,
           bugs_permitidos: this.formTarea.value.bugs_permitidos,
           id_tarea: tareaDep?.code || null
         },
@@ -603,5 +609,9 @@ export class TableroTareasComponent implements OnInit {
     if (fechaActual > new Date(fechaFin))
       return 2;
     return 3;
+  }
+
+  onSliderChange(event: any) {
+    this.formTarea.controls['peso'].setValue(event.value);
   }
 }

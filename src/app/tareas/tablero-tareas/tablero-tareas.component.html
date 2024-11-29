@@ -154,7 +154,8 @@
 
                 <div class="field">
                     <label for="peso">Peso</label>
-                    <p-inputNumber formControlName="peso" [useGrouping]="false" [showButtons]="true" inputId="peso" /> 
+                    <p-slider [(ngModel)]="valor" min="100" max="6000" step="100" [ngModelOptions]="{standalone: true}" (onChange)="onSliderChange($event)" />
+                    <p-inputNumber formControlName="peso" [useGrouping]="false" [disabled]="true" inputId="peso" class="mt-3" /> 
                 </div>
 
                 <div class="field">
