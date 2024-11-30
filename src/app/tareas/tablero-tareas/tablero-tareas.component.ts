@@ -303,7 +303,7 @@ export class TableroTareasComponent implements OnInit {
         label: 'Postergar tarea',
         icon: 'pi pi-question',
         command: async () => {
-          this.cambiaEstado(this.estado.POSTERGADA, tarea);
+          this.cambiaEstadoCancelada(tarea);
         },
         visible: this.tareasNuevas.includes(tarea)
       },
@@ -311,7 +311,7 @@ export class TableroTareasComponent implements OnInit {
         label: 'Cancelar tarea',
         icon: 'pi pi-times',
         command: async () => {
-          this.cambiaEstadoCancelada(tarea);
+          this.cambiaEstado(this.estado.CANCELADA, tarea);
         },
         visible: this.tareasNuevas.includes(tarea)
       }
