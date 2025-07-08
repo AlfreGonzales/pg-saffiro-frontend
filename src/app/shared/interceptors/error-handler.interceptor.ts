@@ -5,8 +5,8 @@ import Swal from 'sweetalert2';
 export const errorHandlerInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(catchError((error: HttpErrorResponse) => {
     Swal.fire({
-      title: `${error.statusText}`,
-      text: error.error.message,
+      title: error.error.message,
+      text: `${error.statusText}`,
       icon: "error"
     });
     return throwError(() => error);

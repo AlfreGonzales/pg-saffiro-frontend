@@ -19,6 +19,27 @@ export class AppComponent {
   ngOnInit(): void {
     this.primengConfig.ripple = true;
 
+    // Traducción al español
+    this.primengConfig.setTranslation({
+      accept: 'Aceptar',
+      reject: 'Rechazar',
+      dayNames: ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'],
+      dayNamesShort: ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'],
+      dayNamesMin: ['D', 'L', 'M', 'X', 'J', 'V', 'S'],
+      monthNames: ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+                   'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'],
+      monthNamesShort: ['ene', 'feb', 'mar', 'abr', 'may', 'jun',
+                        'jul', 'ago', 'sep', 'oct', 'nov', 'dic'],
+      today: 'Hoy',
+      clear: 'Limpiar',
+      weak: 'Débil',
+      medium: 'Medio',
+      strong: 'Fuerte',
+      passwordPrompt: 'Ingresa una contraseña',
+      emptyMessage: 'No se encontraron resultados',
+      emptyFilterMessage: 'No se encontraron coincidencias'
+    });
+
     //NOTA: configuracion de estilos de la app
     const config: AppConfig = {
         ripple: true,                       //efecto animacion de ondas en los botones
